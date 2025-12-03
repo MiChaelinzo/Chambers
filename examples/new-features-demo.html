@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skeleton Crew - New Features Demo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    h1 {
+      color: #ff6b6b;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .container {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    canvas {
+      border: 3px solid #333;
+      box-shadow: 0 0 20px rgba(255,107,107,0.3);
+      background: #000;
+    }
+    
+    .controls {
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 8px;
+      min-width: 300px;
+    }
+    
+    .control-group {
+      margin-bottom: 20px;
+    }
+    
+    .control-group h3 {
+      color: #ff6b6b;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    
+    button {
+      background: #ff6b6b;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      transition: background 0.2s;
+    }
+    
+    button:hover {
+      background: #ff5252;
+    }
+    
+    button:active {
+      transform: scale(0.95);
+    }
+    
+    .stats {
+      background: #1a1a1a;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-size: 12px;
+    }
+    
+    .stat-line {
+      margin: 5px 0;
+    }
+    
+    .info {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      max-width: 800px;
+    }
+    
+    .info h2 {
+      color: #ff6b6b;
+      margin-top: 0;
+    }
+    
+    .info ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    
+    .info li {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>👻 Skeleton Crew - New Features Demo</h1>
+  
+  <div class="container">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
+    <div class="controls">
+      <div class="control-group">
+        <h3>🎨 Particle Effects</h3>
+        <button onclick="demo.spawnBlood()">Blood Splatter</button>
+        <button onclick="demo.spawnDust()">Dust Cloud</button>
+        <button onclick="demo.spawnFog()">Fog</button>
+        <button onclick="demo.spawnSparks()">Sparks</button>
+        <button onclick="demo.spawnSmoke()">Smoke</button>
+        <button onclick="demo.clearParticles()">Clear All</button>
+      </div>
+      
+      <div class="control-group">
+        <h3>✨ Animations</h3>
+        <button onclick="demo.fadeIn()">Fade In</button>
+        <button onclick="demo.fadeOut()">Fade Out</button>
+        <button onclick="demo.shake()">Shake</button>
+        <button onclick="demo.tweenPosition()">Move</button>
+        <button onclick="demo.tweenSize()">Grow/Shrink</button>
+      </div>
+      
+      <div class="control-group">
+        <h3>⚡ Performance</h3>
+        <button onclick="demo.spawnMany()">Spawn 100 Entities</button>
+        <button onclick="demo.clearEntities()">Clear Entities</button>
+        <button onclick="demo.toggleSpatialGrid()">Toggle Grid Debug</button>
+      </div>
+      
+      <div class="stats">
+        <div class="stat-line">Particles: <span id="particleCount">0</span></div>
+        <div class="stat-line">Entities: <span id="entityCount">0</span></div>
+        <div class="stat-line">FPS: <span id="fps">60</span></div>
+        <div class="stat-line">Grid Cells: <span id="gridCells">0</span></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="info">
+    <h2>New Features</h2>
+    <ul>
+      <li><strong>Particle System:</strong> Create atmospheric effects like blood, dust, fog, sparks, and smoke</li>
+      <li><strong>Animation System:</strong> Smooth tweening, fading, shaking, and frame-based animations</li>
+      <li><strong>Spatial Grid:</strong> Efficient spatial partitioning for better performance with many entities</li>
+    </ul>
+    
+    <h2>Controls</h2>
+    <ul>
+      <li>Click buttons to test different features</li>
+      <li>Particle effects spawn at the center of the canvas</li>
+      <li>Animations affect the demo entity (red square)</li>
+      <li>Spatial grid shows performance optimization in action</li>
+    </ul>
+  </div>
+
+  <script type="module">
+    import { ParticleSystem } from '../framework/systems/ParticleSystem.js';
+    import { AnimationSystem } from '../framework/systems/AnimationSystem.js';
+    import { SpatialGrid } from '../framework/utils/SpatialGrid.js';
+
+    class Demo {
+      constructor() {
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        
+        this.particleSystem = new ParticleSystem({ maxParticles: 2000 });
+        this.animationSystem = new AnimationSystem();
+        this.spatialGrid = new SpatialGrid({
+          cellSize: 100,
+          worldWidth: 800,
+          worldHeight: 600
+        });
+        
+        this.camera = { x: 400, y: 300, zoom: 1 };
+        this.showGrid = false;
+        
+        // Demo entity
+        this.entity = {
+          id: 'demo',
+          position: { x: 400, y: 300 },
+          size: 50,
+          color: '#ff6b6b',
+          state: { alpha: 1 }
+        };
+        
+        this.entities = [this.entity];
+        this.spatialGrid.insert(this.entity);
+        
+        this.lastTime = performance.now();
+        this.fps = 60;
+        
+        this.start();
+      }
+      
+      start() {
+        requestAnimationFrame(this.update.bind(this));
+      }
+      
+      update(currentTime) {
+        const deltaTime = (currentTime - this.lastTime) / 1000;
+        this.lastTime = currentTime;
+        
+        // Update FPS
+        this.fps = Math.round(1 / deltaTime);
+        
+        // Update systems
+        this.particleSystem.update(deltaTime);
+        this.animationSystem.update(deltaTime);
+        
+        // Render
+        this.render();
+        
+        // Update stats
+        this.updateStats();
+        
+        requestAnimationFrame(this.update.bind(this));
+      }
+      
+      render() {
+        // Clear
+        this.ctx.fillStyle = '#000';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Render spatial grid if enabled
+        if (this.showGrid) {
+          this.spatialGrid.debugRender(this.ctx, this.camera);
+        }
+        
+        // Render entities
+        for (const entity of this.entities) {
+          this.ctx.save();
+          this.ctx.globalAlpha = entity.state.alpha || 1;
+          this.ctx.fillStyle = entity.color || '#ff6b6b';
+          this.ctx.fillRect(
+            entity.position.x - entity.size / 2,
+            entity.position.y - entity.size / 2,
+            entity.size,
+            entity.size
+          );
+          this.ctx.restore();
+        }
+        
+        // Render particles
+        this.particleSystem.render(this.ctx, this.camera);
+      }
+      
+      updateStats() {
+        document.getElementById('particleCount').textContent = this.particleSystem.getParticleCount();
+        document.getElementById('entityCount').textContent = this.entities.length;
+        document.getElementById('fps').textContent = this.fps;
+        const stats = this.spatialGrid.getStats();
+        document.getElementById('gridCells').textContent = 
+          `${stats.occupiedCells}/${stats.totalCells}`;
+      }
+      
+      // Particle effects
+      spawnBlood() {
+        this.particleSystem.emit({
+          position: { x: 400, y: 300 },
+          type: 'blood',
+          count: 50,
+          speed: Math.random() * 100 + 50
+        });
+      }
+      
+      spawnDust() {
+        this.particleSystem.emit({
+          position: { x: 400, y: 300 },
+          type: 'dust',
+          count: 30
+        });
+      }
+      
+      spawnFog() {
+        this.particleSystem.createEmitter('fog', {
+          x: 400,
+          y: 300,
+          rate: 20,
+          lifetime: 3,
+          particle: { type: 'fog' }
+        });
+      }
+      
+      spawnSparks() {
+        this.particleSystem.emit({
+          position: { x: 400, y: 300 },
+          type: 'spark',
+          count: 100
+        });
+      }
+      
+      spawnSmoke() {
+        this.particleSystem.createEmitter('smoke', {
+          x: 400,
+          y: 300,
+          rate: 15,
+          lifetime: 2,
+          particle: { type: 'smoke' }
+        });
+      }
+      
+      clearParticles() {
+        this.particleSystem.clear();
+        for (const [id] of this.particleSystem.emitters) {
+          this.particleSystem.removeEmitter(id);
+        }
+      }
+      
+      // Animations
+      fadeIn() {
+        this.animationSystem.fadeIn(this.entity, 1.0);
+      }
+      
+      fadeOut() {
+        this.animationSystem.fadeOut(this.entity, 1.0);
+      }
+      
+      shake() {
+        this.animationSystem.shake(this.entity, 10, 0.5);
+      }
+      
+      tweenPosition() {
+        const targetX = Math.random() * 700 + 50;
+        const targetY = Math.random() * 500 + 50;
+        
+        this.animationSystem.tweenMultiple(
+          this.entity.position,
+          { x: targetX, y: targetY },
+          1.0,
+          'easeInOut'
+        );
+      }
+      
+      tweenSize() {
+        const targetSize = this.entity.size === 50 ? 100 : 50;
+        this.animationSystem.tween({
+          target: this.entity,
+          property: 'size',
+          to: targetSize,
+          duration: 0.5,
+          easing: 'easeInOut'
+        });
+      }
+      
+      // Performance
+      spawnMany() {
+        for (let i = 0; i < 100; i++) {
+          const entity = {
+            id: `entity_${Date.now()}_${i}`,
+            position: {
+              x: Math.random() * 800,
+              y: Math.random() * 600
+            },
+            size: Math.random() * 20 + 10,
+            color: `hsl(${Math.random() * 360}, 70%, 50%)`,
+            state: { alpha: 1 }
+          };
+          this.entities.push(entity);
+          this.spatialGrid.insert(entity);
+        }
+      }
+      
+      clearEntities() {
+        this.entities = [this.entity];
+        this.spatialGrid.clear();
+        this.spatialGrid.insert(this.entity);
+      }
+      
+      toggleSpatialGrid() {
+        this.showGrid = !this.showGrid;
+      }
+    }
+
+    // Create global demo instance
+    window.demo = new Demo();
+  </script>
+</body>
+</html>

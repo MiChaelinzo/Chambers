@@ -16,6 +16,9 @@ Skeleton Crew is a flexible, configuration-driven game framework designed specif
 - ⚙️ Configuration-driven design (no code changes needed)
 - 🧪 Comprehensive test suite with property-based testing
 - 🎨 Two complete example games included
+- ✨ **NEW:** Particle system for atmospheric effects
+- 🎬 **NEW:** Animation system with tweening and effects
+- ⚡ **NEW:** Spatial partitioning for performance optimization
 
 ## 📦 What's Included
 
@@ -52,6 +55,12 @@ open games/dungeon-crawler/index.html
 ```bash
 # Open in browser
 open games/puzzle-game/index.html
+```
+
+**New Features Demo:**
+```bash
+# Open in browser
+open examples/new-features-demo.html
 ```
 
 ### Running Tests
@@ -539,3 +548,223 @@ This project is licensed under the terms specified in the [LICENSE](LICENSE) fil
 ---
 
 **Built with 👻 by the Skeleton Crew team**
+
+
+## 🆕 New Features (v2.0)
+
+### Particle System
+
+Create atmospheric effects like blood splatters, dust clouds, fog, sparks, and smoke.
+
+```javascript
+// Get particle system from game
+const particles = game.getParticleSystem();
+
+// Emit blood splatter
+particles.emit({
+  position: { x: player.position.x, y: player.position.y },
+  type: 'blood',
+  count: 50,
+  speed: 100
+});
+
+// Create continuous fog emitter
+particles.createEmitter('fog_emitter', {
+  x: 400,
+  y: 300,
+  rate: 20, // particles per second
+  lifetime: 5, // emitter duration (-1 for infinite)
+  particle: {
+    type: 'fog',
+    lifetime: 3.0
+  }
+});
+
+// Custom particle configuration
+particles.emit({
+  position: { x: 100, y: 100 },
+  type: 'default',
+  count: 30,
+  color: '#ff00ff',
+  size: 8,
+  speed: 150,
+  lifetime: 2.0,
+  accelerationY: 100 // gravity
+});
+```
+
+**Particle Types:**
+- `blood` - Red particles with gravity
+- `dust` - Brown particles, slow movement
+- `fog` - Large, soft particles that rise
+- `spark` - Fast, bright particles
+- `smoke` - Gray particles that rise
+- `default` - Customizable particles
+
+### Animation System
+
+Smooth animations, tweening, and visual effects.
+
+```javascript
+// Get animation system from game
+const anim = game.getAnimationSystem();
+
+// Fade in an entity
+anim.fadeIn(entity, 1.0, () => {
+  console.log('Fade complete!');
+});
+
+// Fade out an entity
+anim.fadeOut(entity, 1.0);
+
+// Shake effect (for damage, explosions)
+anim.shake(entity, intensity = 10, duration = 0.3);
+
+// Tween a single property
+anim.tween({
+  target: entity.position,
+  property: 'x',
+  to: 500,
+  duration: 2.0,
+  easing: 'easeInOut',
+  onComplete: () => console.log('Done!')
+});
+
+// Tween multiple properties at once
+anim.tweenMultiple(
+  entity.position,
+  { x: 500, y: 300 },
+  1.5,
+  'easeInOut'
+);
+
+// Register frame-based animation
+anim.registerAnimation('walk', {
+  frames: [0, 1, 2, 3],
+  frameRate: 10,
+  loop: true
+});
+
+// Play animation on entity
+anim.playAnimation(entity, 'walk');
+```
+
+**Easing Functions:**
+- `linear` - Constant speed
+- `easeIn` - Slow start, fast end
+- `easeOut` - Fast start, slow end
+- `easeInOut` - Slow start and end
+- `easeInCubic`, `easeOutCubic`, `easeInOutCubic` - Cubic curves
+- `elastic` - Elastic bounce effect
+- `bounce` - Bouncing effect
+
+### Spatial Grid (Performance Optimization)
+
+Efficient spatial partitioning for collision detection and proximity queries.
+
+```javascript
+// Get spatial grid from game
+const grid = game.getSpatialGrid();
+
+// Grid is automatically updated each frame
+// Use it for efficient queries:
+
+// Find entities near a position
+const nearbyEntities = grid.getNearby(x, y, radius);
+
+// Find entities in a rectangular area
+const entitiesInRect = grid.getInRect(x, y, width, height);
+
+// Get potential collision pairs (entities in same cells)
+const collisionPairs = grid.getPotentialCollisions();
+
+// Get grid statistics
+const stats = grid.getStats();
+console.log(`Occupied cells: ${stats.occupiedCells}/${stats.totalCells}`);
+console.log(`Entities per cell: ${stats.averageEntitiesPerCell}`);
+
+// Debug render (shows grid and entity distribution)
+grid.debugRender(ctx, camera);
+```
+
+**Performance Benefits:**
+- O(1) spatial queries instead of O(n²)
+- Efficient collision detection for many entities
+- Reduces CPU usage with large entity counts
+- Configurable cell size for different game scales
+
+### Integration Example
+
+Here's how to use all new features together:
+
+```javascript
+// In your game entity update method
+update(deltaTime, context) {
+  const game = context.game;
+  
+  // Use spatial grid for efficient enemy detection
+  const nearbyEnemies = game.getSpatialGrid()
+    .getNearby(this.position.x, this.position.y, 200)
+    .filter(e => e.type === 'enemy');
+  
+  if (nearbyEnemies.length > 0) {
+    // Spawn warning particles
+    game.getParticleSystem().emit({
+      position: this.position,
+      type: 'spark',
+      count: 10
+    });
+    
+    // Shake camera
+    game.getAnimationSystem().shake(this, 5, 0.2);
+  }
+}
+
+// When player takes damage
+takeDamage(amount) {
+  this.health -= amount;
+  
+  // Blood splatter effect
+  game.getParticleSystem().emit({
+    position: this.position,
+    type: 'blood',
+    count: 30
+  });
+  
+  // Flash red animation
+  const anim = game.getAnimationSystem();
+  this.state.tint = '#ff0000';
+  anim.tween({
+    target: this.state,
+    property: 'tintAlpha',
+    from: 1,
+    to: 0,
+    duration: 0.3,
+    onComplete: () => {
+      this.state.tint = null;
+    }
+  });
+}
+```
+
+### Configuration
+
+Configure new systems in your game config:
+
+```json
+{
+  "game": {
+    "particles": {
+      "maxParticles": 2000
+    },
+    "spatialGridCellSize": 100,
+    "worldWidth": 2000,
+    "worldHeight": 2000
+  }
+}
+```
+
+### Demo
+
+See `examples/new-features-demo.html` for an interactive demonstration of all new features.
+

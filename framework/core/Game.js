@@ -11,6 +11,9 @@ import { ResourceManager } from '../mechanics/ResourceManager.js';
 import { SanitySystem } from '../mechanics/SanitySystem.js';
 import { AudioSystem } from '../systems/AudioSystem.js';
 import { ThreatSystem } from '../mechanics/ThreatSystem.js';
+import { ParticleSystem } from '../systems/ParticleSystem.js';
+import { AnimationSystem } from '../systems/AnimationSystem.js';
+import { SpatialGrid } from '../utils/SpatialGrid.js';
 
 /**
  * Game class - Central coordinator for all framework systems
@@ -47,6 +50,15 @@ export class Game {
     this.sanitySystem = new SanitySystem(config.maxSanity || 100);
     this.audioSystem = new AudioSystem();
     this.threatSystem = new ThreatSystem(config.threat || {});
+    
+    // Initialize new systems
+    this.particleSystem = new ParticleSystem(config.particles || {});
+    this.animationSystem = new AnimationSystem();
+    this.spatialGrid = new SpatialGrid({
+      cellSize: config.spatialGridCellSize || 100,
+      worldWidth: config.worldWidth || 2000,
+      worldHeight: config.worldHeight || 2000
+    });
 
     // Initialize resources from config
     if (config.resources && Array.isArray(config.resources)) {
@@ -139,6 +151,21 @@ export class Game {
 
     // Update the current scene (which updates all entities)
     currentScene.update(deltaTime, context);
+    
+    // Update spatial grid with entity positions
+    this.spatialGrid.clear();
+    const entities = currentScene.getAllEntities();
+    for (const entity of entities) {
+      if (!entity.isDeleted()) {
+        this.spatialGrid.insert(entity);
+      }
+    }
+    
+    // Update particle system
+    this.particleSystem.update(deltaTime);
+    
+    // Update animation system
+    this.animationSystem.update(deltaTime);
 
     // Check for player death (permadeath)
     if (this.player && this.player.isDead && this.player.isDead()) {
@@ -227,6 +254,9 @@ export class Game {
       const isVisible = visibleEntities.includes(entity);
       this.renderer.drawEntity(entity, isVisible);
     });
+    
+    // Render particles
+    this.particleSystem.render(this.renderer.ctx, this.renderer.camera);
 
     // Prepare and render UI data
     const uiData = this._prepareUIData();
@@ -362,6 +392,30 @@ export class Game {
    */
   getThreatSystem() {
     return this.threatSystem;
+  }
+
+  /**
+   * Get the particle system
+   * @returns {ParticleSystem}
+   */
+  getParticleSystem() {
+    return this.particleSystem;
+  }
+
+  /**
+   * Get the animation system
+   * @returns {AnimationSystem}
+   */
+  getAnimationSystem() {
+    return this.animationSystem;
+  }
+
+  /**
+   * Get the spatial grid
+   * @returns {SpatialGrid}
+   */
+  getSpatialGrid() {
+    return this.spatialGrid;
   }
 
   /**
