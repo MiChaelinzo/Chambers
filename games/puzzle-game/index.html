@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skeleton Crew: Puzzle Game</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    #game-container {
+      display: flex;
+      gap: 20px;
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    #canvas-container {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    #game-canvas {
+      border: 3px solid #8b4513;
+      background: #000;
+      display: block;
+      box-shadow: 0 0 30px rgba(139, 69, 19, 0.4);
+      border-radius: 8px;
+    }
+
+    #ui-panel {
+      background: linear-gradient(145deg, #2c2c54, #40407a);
+      border: 2px solid #8b4513;
+      border-radius: 12px;
+      padding: 25px;
+      min-width: 320px;
+      max-width: 400px;
+      box-shadow: 0 0 25px rgba(139, 69, 19, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 25px;
+      text-align: center;
+      color: #d4af37;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      color: #d4af37;
+      border-bottom: 2px solid #8b4513;
+      padding-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .section {
+      margin-bottom: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid rgba(139, 69, 19, 0.3);
+    }
+
+    .stat {
+      margin: 12px 0;
+    }
+
+    .stat-label {
+      font-weight: bold;
+      color: #d4af37;
+      margin-bottom: 5px;
+    }
+
+    .stat-bar {
+      background: #2c2c2c;
+      height: 24px;
+      border: 2px solid #8b4513;
+      border-radius: 12px;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      background: linear-gradient(90deg, #4a90e2, #357abd);
+      height: 100%;
+      transition: width 0.4s ease;
+      border-radius: 10px;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-bar-fill.low {
+      background: linear-gradient(90deg, #e74c3c, #c0392b);
+    }
+
+    .stat-bar-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    #inventory-list {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    #inventory-list li {
+      padding: 12px;
+      margin: 8px 0;
+      background: linear-gradient(145deg, #3c3c3c, #2c2c2c);
+      border: 1px solid #8b4513;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    #inventory-list li:hover {
+      background: linear-gradient(145deg, #4c4c4c, #3c3c3c);
+      transform: translateX(5px);
+    }
+
+    #inventory-list li.selected {
+      background: linear-gradient(145deg, #d4af37, #b8941f);
+      color: #000;
+      font-weight: bold;
+    }
+
+    #inventory-list li:empty {
+      display: none;
+    }
+
+    .empty-message {
+      color: #888;
+      font-style: italic;
+      padding: 15px;
+      text-align: center;
+    }
+
+    #story-section {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid #8b4513;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      min-height: 120px;
+    }
+
+    #scene-info {
+      margin-bottom: 15px;
+    }
+
+    #scene-name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #d4af37;
+      margin-bottom: 8px;
+    }
+
+    #scene-description {
+      font-size: 14px;
+      color: #b0b0b0;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    #story-text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #e0e0e0;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid #d4af37;
+      min-height: 60px;
+    }
+
+    #interaction-prompt {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #d4af37;
+      border-radius: 25px;
+      padding: 12px 25px;
+      color: #d4af37;
+      font-weight: bold;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    #controls {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 2px solid #8b4513;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #b0b0b0;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    .control-title {
+      color: #d4af37;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    #error-message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(231, 76, 60, 0.95);
+      border: 2px solid #c0392b;
+      border-radius: 8px;
+      padding: 15px 25px;
+      color: #fff;
+      display: none;
+      z-index: 1000;
+      max-width: 80%;
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    }
+
+    .save-info {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* Scrollbar styling */
+    #inventory-list::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #inventory-list::-webkit-scrollbar-track {
+      background: #2c2c2c;
+      border-radius: 4px;
+    }
+
+    #inventory-list::-webkit-scrollbar-thumb {
+      background: #8b4513;
+      border-radius: 4px;
+    }
+
+    #inventory-list::-webkit-scrollbar-thumb:hover {
+      background: #a0522d;
+    }
+
+    /* Responsive design */
+    @media (max-width: 1200px) {
+      #game-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      #ui-panel {
+        max-width: 800px;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="canvas-container">
+      <canvas id="game-canvas" width="800" height="600"></canvas>
+      <div id="interaction-prompt"></div>
+      <div id="error-message"></div>
+    </div>
+
+    <div id="ui-panel">
+      <h1>BLACKWOOD MANOR</h1>
+
+      <div id="story-section" class="section">
+        <div id="scene-info">
+          <div id="scene-name">Loading...</div>
+          <div id="scene-description">Preparing your journey...</div>
+        </div>
+        <div id="story-text">Welcome to Blackwood Manor. The shadows hold many secrets...</div>
+      </div>
+
+      <div id="stats" class="section">
+        <h2>Status</h2>
+        
+        <div class="stat">
+          <div class="stat-label">Sanity</div>
+          <div class="stat-bar">
+            <div class="stat-bar-fill" id="sanity-bar" style="width: 100%"></div>
+            <div class="stat-bar-text" id="sanity-text">100 / 100</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="inventory" class="section">
+        <h2>Inventory</h2>
+        <ul id="inventory-list">
+          <li class="empty-message">No items</li>
+        </ul>
+      </div>
+
+      <div id="controls">
+        <div class="control-group">
+          <div class="control-title">Movement:</div>
+          WASD / Arrow Keys - Move around
+        </div>
+        
+        <div class="control-group">
+          <div class="control-title">Interactions:</div>
+          E - Interact with objects<br>
+          I - Toggle inventory display
+        </div>
+        
+        <div class="control-group">
+          <div class="control-title">Game:</div>
+          S - Save game<br>
+          L - Load game
+        </div>
+        
+        <div class="control-group">
+          <div class="control-title">Goal:</div>
+          Explore the manor, solve puzzles, and uncover the truth behind Blackwood Manor's dark secrets.
+        </div>
+
+        <div class="save-info">
+          Your progress is automatically saved at checkpoints. You can also manually save at any time.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

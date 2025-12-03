@@ -1,0 +1,439 @@
+{
+  "scenes": {
+    "entrance_hall": {
+      "type": "fixed",
+      "name": "Entrance Hall",
+      "description": "A dimly lit entrance hall with stone walls and flickering torches.",
+      "width": 20,
+      "height": 15,
+      "layout": [
+        "####################",
+        "#..................#",
+        "#..........C.......#",
+        "#..................#",
+        "#...K..............#",
+        "#..................#",
+        "#..........D.......#",
+        "#..................#",
+        "#..................#",
+        "#.......P..........#",
+        "#..................#",
+        "#..................#",
+        "#..........E.......#",
+        "#..................#",
+        "####################"
+      ],
+      "entities": [
+        {
+          "type": "player",
+          "id": "player",
+          "x": 8,
+          "y": 9,
+          "config": {}
+        },
+        {
+          "type": "door",
+          "id": "main_door",
+          "x": 11,
+          "y": 6,
+          "config": {
+            "locked": true,
+            "requiredKey": "brass_key",
+            "targetScene": "library",
+            "targetX": 2,
+            "targetY": 8
+          }
+        },
+        {
+          "type": "key",
+          "id": "brass_key",
+          "x": 4,
+          "y": 4,
+          "config": {
+            "keyType": "brass_key",
+            "name": "Brass Key",
+            "description": "An old brass key with intricate engravings."
+          }
+        },
+        {
+          "type": "clue",
+          "id": "entrance_clue",
+          "x": 11,
+          "y": 2,
+          "config": {
+            "text": "Welcome to the Manor. The library holds many secrets, but first you must find the key.",
+            "examined": false,
+            "name": "Welcome Note"
+          }
+        },
+        {
+          "type": "checkpoint",
+          "id": "entrance_checkpoint",
+          "x": 11,
+          "y": 12,
+          "config": {
+            "name": "Entrance Hall Checkpoint",
+            "activated": false
+          }
+        }
+      ],
+      "puzzles": [],
+      "connections": {
+        "north": null,
+        "south": null,
+        "east": "library",
+        "west": null
+      }
+    },
+    "library": {
+      "type": "fixed",
+      "name": "Ancient Library",
+      "description": "Towering bookshelves filled with dusty tomes. The air smells of old parchment and secrets.",
+      "width": 25,
+      "height": 18,
+      "layout": [
+        "#########################",
+        "#.......................#",
+        "D.......................#",
+        "#.......................#",
+        "#...B.......B.......B...#",
+        "#...B.......B.......B...#",
+        "#...B.......B.......B...#",
+        "#.......................#",
+        "#.........O.............#",
+        "#.......................#",
+        "#...B.......B.......B...#",
+        "#...B.......B.......B...#",
+        "#...B.......B.......B...#",
+        "#.......................#",
+        "#..........C............#",
+        "#...................K...#",
+        "#.......................#",
+        "#########################"
+      ],
+      "entities": [
+        {
+          "type": "door",
+          "id": "entrance_door",
+          "x": 0,
+          "y": 2,
+          "config": {
+            "locked": false,
+            "targetScene": "entrance_hall",
+            "targetX": 11,
+            "targetY": 6
+          }
+        },
+        {
+          "type": "interactive_object",
+          "id": "ancient_tome",
+          "x": 10,
+          "y": 8,
+          "config": {
+            "name": "Ancient Tome",
+            "description": "A leather-bound book with strange symbols on the cover.",
+            "state": "closed",
+            "interactions": {
+              "examine": {
+                "text": "The tome contains a riddle: 'Where knowledge sleeps, the silver key keeps.'",
+                "action": "reveal_clue"
+              },
+              "open": {
+                "text": "The book opens to reveal a hidden compartment!",
+                "action": "give_item",
+                "item": "silver_key",
+                "requires": "examined"
+              }
+            }
+          }
+        },
+        {
+          "type": "key",
+          "id": "silver_key",
+          "x": 21,
+          "y": 15,
+          "config": {
+            "keyType": "silver_key",
+            "name": "Silver Key",
+            "description": "A gleaming silver key hidden among the books.",
+            "hidden": true
+          }
+        },
+        {
+          "type": "clue",
+          "id": "library_clue",
+          "x": 11,
+          "y": 14,
+          "config": {
+            "text": "The books whisper of a secret chamber beyond the study. Seek the silver key to unlock its mysteries.",
+            "examined": false,
+            "name": "Librarian's Note"
+          }
+        },
+        {
+          "type": "door",
+          "id": "study_door",
+          "x": 24,
+          "y": 9,
+          "config": {
+            "locked": true,
+            "requiredKey": "silver_key",
+            "targetScene": "study",
+            "targetX": 2,
+            "targetY": 9,
+            "hidden": false
+          }
+        }
+      ],
+      "puzzles": [
+        {
+          "id": "tome_puzzle",
+          "type": "sequence",
+          "description": "Unlock the ancient tome's secret",
+          "conditions": [
+            {
+              "type": "entity_examined",
+              "entityId": "ancient_tome"
+            },
+            {
+              "type": "entity_interacted",
+              "entityId": "ancient_tome",
+              "interaction": "open"
+            }
+          ],
+          "reward": {
+            "type": "reveal_entity",
+            "entityId": "silver_key"
+          }
+        }
+      ],
+      "connections": {
+        "north": null,
+        "south": null,
+        "east": "study",
+        "west": "entrance_hall"
+      }
+    },
+    "study": {
+      "type": "fixed",
+      "name": "Scholar's Study",
+      "description": "A private study filled with research notes and arcane instruments.",
+      "width": 18,
+      "height": 15,
+      "layout": [
+        "##################",
+        "#................#",
+        "D................#",
+        "#................#",
+        "#....T...........#",
+        "#................#",
+        "#........O.......#",
+        "#................#",
+        "#................#",
+        "#................#",
+        "#.......C........#",
+        "#................#",
+        "#................#",
+        "#................#",
+        "##################"
+      ],
+      "entities": [
+        {
+          "type": "door",
+          "id": "library_door",
+          "x": 0,
+          "y": 2,
+          "config": {
+            "locked": false,
+            "targetScene": "library",
+            "targetX": 24,
+            "targetY": 9
+          }
+        },
+        {
+          "type": "interactive_object",
+          "id": "telescope",
+          "x": 5,
+          "y": 4,
+          "config": {
+            "name": "Antique Telescope",
+            "description": "An ornate telescope pointed toward a star chart on the wall.",
+            "state": "inactive",
+            "interactions": {
+              "examine": {
+                "text": "The telescope shows a constellation pattern. Three stars must align...",
+                "action": "start_puzzle"
+              },
+              "adjust": {
+                "text": "You carefully adjust the telescope's position.",
+                "action": "puzzle_input",
+                "requires": "examined"
+              }
+            }
+          }
+        },
+        {
+          "type": "interactive_object",
+          "id": "star_chart",
+          "x": 9,
+          "y": 6,
+          "config": {
+            "name": "Star Chart",
+            "description": "A detailed astronomical chart with moveable star markers.",
+            "state": "inactive",
+            "interactions": {
+              "examine": {
+                "text": "The chart shows constellation positions. Some stars can be moved.",
+                "action": "reveal_puzzle"
+              },
+              "move_star": {
+                "text": "You move one of the star markers to a new position.",
+                "action": "puzzle_input",
+                "requires": "examined"
+              }
+            }
+          }
+        },
+        {
+          "type": "clue",
+          "id": "study_clue",
+          "x": 8,
+          "y": 10,
+          "config": {
+            "text": "The scholar's final note: 'When Orion's belt aligns with the Northern Star, the path to truth shall be revealed.'",
+            "examined": false,
+            "name": "Scholar's Final Note"
+          }
+        },
+        {
+          "type": "checkpoint",
+          "id": "study_checkpoint",
+          "x": 15,
+          "y": 12,
+          "config": {
+            "name": "Study Checkpoint",
+            "activated": false
+          }
+        }
+      ],
+      "puzzles": [
+        {
+          "id": "constellation_puzzle",
+          "type": "alignment",
+          "description": "Align the constellation to reveal the secret",
+          "conditions": [
+            {
+              "type": "entity_state",
+              "entityId": "telescope",
+              "state": "aligned_north"
+            },
+            {
+              "type": "entity_state",
+              "entityId": "star_chart",
+              "state": "orion_aligned"
+            }
+          ],
+          "reward": {
+            "type": "unlock_passage",
+            "targetScene": "secret_chamber",
+            "message": "The wall slides away, revealing a hidden passage!"
+          }
+        }
+      ],
+      "connections": {
+        "north": "secret_chamber",
+        "south": null,
+        "east": null,
+        "west": "library"
+      }
+    },
+    "secret_chamber": {
+      "type": "fixed",
+      "name": "Secret Chamber",
+      "description": "A hidden chamber containing the manor's greatest secret.",
+      "width": 12,
+      "height": 10,
+      "layout": [
+        "############",
+        "#..........#",
+        "#..........#",
+        "#....O.....#",
+        "#..........#",
+        "#..........#",
+        "#....C.....#",
+        "#..........#",
+        "#..........#",
+        "############"
+      ],
+      "entities": [
+        {
+          "type": "interactive_object",
+          "id": "crystal_orb",
+          "x": 5,
+          "y": 3,
+          "config": {
+            "name": "Crystal Orb",
+            "description": "A glowing crystal orb that pulses with mysterious energy.",
+            "state": "dormant",
+            "interactions": {
+              "examine": {
+                "text": "The orb contains swirling mists that seem to show visions of the past.",
+                "action": "reveal_truth"
+              },
+              "touch": {
+                "text": "As you touch the orb, visions flood your mind. You now understand the manor's dark history.",
+                "action": "complete_game",
+                "requires": "examined"
+              }
+            }
+          }
+        },
+        {
+          "type": "clue",
+          "id": "final_clue",
+          "x": 5,
+          "y": 6,
+          "config": {
+            "text": "Here lies the truth of the Blackwood Manor. Those who seek knowledge must be prepared for what they find.",
+            "examined": false,
+            "name": "The Final Truth"
+          }
+        },
+        {
+          "type": "checkpoint",
+          "id": "final_checkpoint",
+          "x": 8,
+          "y": 8,
+          "config": {
+            "name": "Final Checkpoint",
+            "activated": false
+          }
+        }
+      ],
+      "puzzles": [
+        {
+          "id": "final_revelation",
+          "type": "completion",
+          "description": "Discover the truth of Blackwood Manor",
+          "conditions": [
+            {
+              "type": "entity_interacted",
+              "entityId": "crystal_orb",
+              "interaction": "touch"
+            }
+          ],
+          "reward": {
+            "type": "game_completion",
+            "message": "Congratulations! You have uncovered the secrets of Blackwood Manor."
+          }
+        }
+      ],
+      "connections": {
+        "north": null,
+        "south": "study",
+        "east": null,
+        "west": null
+      }
+    }
+  }
+}

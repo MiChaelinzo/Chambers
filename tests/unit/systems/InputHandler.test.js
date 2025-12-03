@@ -1,4 +1,4 @@
-import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
+import { describe, test, expect, jest } from '@jest/globals';
 import { InputHandler } from '../../../framework/systems/InputHandler.js';
 
 describe('InputHandler Unit Tests', () => {
@@ -13,59 +13,56 @@ describe('InputHandler Unit Tests', () => {
 
   describe('Event Listener Management', () => {
     test('should start listening to events', () => {
-      const mockAddEventListener = jest.fn();
-      const mockWindow = {
-        addEventListener: mockAddEventListener,
-        removeEventListener: jest.fn()
-      };
-      global.window = mockWindow;
-      // Also set window directly for the InputHandler
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
+      
+      // Spy on window.addEventListener
+      const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
+      
       inputHandler.startListening();
 
-      expect(mockAddEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
-      expect(mockAddEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
-      expect(mockAddEventListener).toHaveBeenCalledWith('mousemove', expect.any(Function));
-      expect(mockAddEventListener).toHaveBeenCalledWith('mousedown', expect.any(Function));
-      expect(mockAddEventListener).toHaveBeenCalledWith('mouseup', expect.any(Function));
-      expect(mockAddEventListener).toHaveBeenCalledWith('click', expect.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('keyup', expect.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('mousemove', expect.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('mousedown', expect.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('mouseup', expect.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('click', expect.any(Function));
       expect(inputHandler.isListening).toBe(true);
+      
+      inputHandler.stopListening();
+      addEventListenerSpy.mockRestore();
     });
 
     test('should not add duplicate listeners if already listening', () => {
-      const mockAddEventListener = jest.fn();
-      const mockWindow = {
-        addEventListener: mockAddEventListener,
-        removeEventListener: jest.fn()
-      };
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
+      
+      // Spy on window.addEventListener
+      const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
+      
       inputHandler.startListening();
-      const callCount = mockAddEventListener.mock.calls.length;
+      const callCount = addEventListenerSpy.mock.calls.length;
       
       inputHandler.startListening();
       
-      expect(mockAddEventListener.mock.calls.length).toBe(callCount);
+      expect(addEventListenerSpy.mock.calls.length).toBe(callCount);
+      
+      inputHandler.stopListening();
+      addEventListenerSpy.mockRestore();
     });
 
     test('should stop listening to events', () => {
-      const mockRemoveEventListener = jest.fn();
-      const mockWindow = {
-        addEventListener: jest.fn(),
-        removeEventListener: mockRemoveEventListener
-      };
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
+      
+      // Spy on window.removeEventListener
+      const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+      
       inputHandler.startListening();
       inputHandler.stopListening();
 
-      expect(mockRemoveEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
-      expect(mockRemoveEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('keyup', expect.any(Function));
       expect(inputHandler.isListening).toBe(false);
+      
+      removeEventListenerSpy.mockRestore();
     });
   });
 
@@ -198,18 +195,12 @@ describe('InputHandler Unit Tests', () => {
 
   describe('Mouse Input', () => {
     test('should track mouse position', () => {
-      const mockEventListeners = {};
-      const mockWindow = {
-        addEventListener: jest.fn((event, handler) => {
-          mockEventListeners[event] = handler;
-        }),
-        removeEventListener: jest.fn()
-      };
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
       inputHandler.startListening();
-      mockEventListeners.mousemove({ clientX: 100, clientY: 200 });
+      
+      // Dispatch a mousemove event
+      const event = new MouseEvent('mousemove', { clientX: 100, clientY: 200 });
+      window.dispatchEvent(event);
       
       const pos = inputHandler.getMousePosition();
       expect(pos.x).toBe(100);
@@ -219,18 +210,12 @@ describe('InputHandler Unit Tests', () => {
     });
 
     test('should track mouse button press', () => {
-      const mockEventListeners = {};
-      const mockWindow = {
-        addEventListener: jest.fn((event, handler) => {
-          mockEventListeners[event] = handler;
-        }),
-        removeEventListener: jest.fn()
-      };
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
       inputHandler.startListening();
-      mockEventListeners.mousedown({ button: 0 });
+      
+      // Dispatch a mousedown event
+      const event = new MouseEvent('mousedown', { button: 0 });
+      window.dispatchEvent(event);
       
       expect(inputHandler.isMouseButtonPressed(0)).toBe(true);
       
@@ -238,21 +223,16 @@ describe('InputHandler Unit Tests', () => {
     });
 
     test('should track mouse button release', () => {
-      const mockEventListeners = {};
-      const mockWindow = {
-        addEventListener: jest.fn((event, handler) => {
-          mockEventListeners[event] = handler;
-        }),
-        removeEventListener: jest.fn()
-      };
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
       inputHandler.startListening();
-      mockEventListeners.mousedown({ button: 0 });
+      
+      // Dispatch mousedown then mouseup
+      const downEvent = new MouseEvent('mousedown', { button: 0 });
+      window.dispatchEvent(downEvent);
       expect(inputHandler.isMouseButtonPressed(0)).toBe(true);
       
-      mockEventListeners.mouseup({ button: 0 });
+      const upEvent = new MouseEvent('mouseup', { button: 0 });
+      window.dispatchEvent(upEvent);
       expect(inputHandler.isMouseButtonPressed(0)).toBe(false);
       
       inputHandler.stopListening();
@@ -261,65 +241,46 @@ describe('InputHandler Unit Tests', () => {
 
   describe('Callbacks', () => {
     test('should call keyboard callbacks on key events', () => {
-      const mockEventListeners = {};
-      const mockWindow = {
-        addEventListener: jest.fn((event, handler) => {
-          mockEventListeners[event] = handler;
-        }),
-        removeEventListener: jest.fn()
-      };
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
       inputHandler.startListening();
       
       const callback = jest.fn();
       inputHandler.onKeyDown(callback);
       
-      mockEventListeners.keydown({ key: 'w' });
+      // Dispatch keydown event
+      const downEvent = new KeyboardEvent('keydown', { key: 'w' });
+      window.dispatchEvent(downEvent);
       expect(callback).toHaveBeenCalledWith('keydown', 'w');
       
-      mockEventListeners.keyup({ key: 'w' });
+      // Dispatch keyup event
+      const upEvent = new KeyboardEvent('keyup', { key: 'w' });
+      window.dispatchEvent(upEvent);
       expect(callback).toHaveBeenCalledWith('keyup', 'w');
       
       inputHandler.stopListening();
     });
 
     test('should call mouse callbacks on click events', () => {
-      const mockEventListeners = {};
-      const mockWindow = {
-        addEventListener: jest.fn((event, handler) => {
-          mockEventListeners[event] = handler;
-        }),
-        removeEventListener: jest.fn()
-      };
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
       inputHandler.startListening();
       
       const callback = jest.fn();
       inputHandler.onMouseClick(callback);
       
-      const mockPos = { x: 100, y: 200 };
-      inputHandler.mousePos = mockPos;
-      mockEventListeners.click({ button: 0 });
+      // Set mouse position first
+      const moveEvent = new MouseEvent('mousemove', { clientX: 100, clientY: 200 });
+      window.dispatchEvent(moveEvent);
       
-      expect(callback).toHaveBeenCalledWith('click', 0, mockPos);
+      // Dispatch click event
+      const clickEvent = new MouseEvent('click', { button: 0 });
+      window.dispatchEvent(clickEvent);
+      
+      expect(callback).toHaveBeenCalledWith('click', 0, { x: 100, y: 200 });
       
       inputHandler.stopListening();
     });
 
     test('should support multiple callbacks', () => {
-      const mockEventListeners = {};
-      const mockWindow = {
-        addEventListener: jest.fn((event, handler) => {
-          mockEventListeners[event] = handler;
-        }),
-        removeEventListener: jest.fn()
-      };
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
       inputHandler.startListening();
       
@@ -329,7 +290,9 @@ describe('InputHandler Unit Tests', () => {
       inputHandler.onKeyDown(callback1);
       inputHandler.onKeyDown(callback2);
       
-      mockEventListeners.keydown({ key: 'w' });
+      // Dispatch keydown event
+      const event = new KeyboardEvent('keydown', { key: 'w' });
+      window.dispatchEvent(event);
       
       expect(callback1).toHaveBeenCalled();
       expect(callback2).toHaveBeenCalled();
@@ -354,19 +317,14 @@ describe('InputHandler Unit Tests', () => {
     });
 
     test('should clear all mouse button states', () => {
-      const mockEventListeners = {};
-      const mockWindow = {
-        addEventListener: jest.fn((event, handler) => {
-          mockEventListeners[event] = handler;
-        }),
-        removeEventListener: jest.fn()
-      };
-      globalThis.window = mockWindow;
-
       const inputHandler = new InputHandler();
       inputHandler.startListening();
-      mockEventListeners.mousedown({ button: 0 });
-      mockEventListeners.mousedown({ button: 1 });
+      
+      // Dispatch mousedown events
+      const event0 = new MouseEvent('mousedown', { button: 0 });
+      window.dispatchEvent(event0);
+      const event1 = new MouseEvent('mousedown', { button: 1 });
+      window.dispatchEvent(event1);
       
       expect(inputHandler.isMouseButtonPressed(0)).toBe(true);
       expect(inputHandler.isMouseButtonPressed(1)).toBe(true);

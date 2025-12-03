@@ -1,0 +1,138 @@
+{
+  "scenes": {
+    "dungeon_1": {
+      "type": "procedural",
+      "generator": {
+        "width": 50,
+        "height": 50,
+        "roomCount": 8,
+        "minRoomSize": 4,
+        "maxRoomSize": 10,
+        "maxAttempts": 100
+      },
+      "player": {
+        "health": 100,
+        "speed": 100,
+        "damage": 10,
+        "width": 32,
+        "height": 32
+      },
+      "enemies": {
+        "count": 5,
+        "config": {
+          "health": 30,
+          "speed": 50,
+          "damage": 10,
+          "chaseRadius": 200,
+          "attackRadius": 32,
+          "attackRate": 1.0,
+          "width": 32,
+          "height": 32
+        }
+      },
+      "items": {
+        "count": 8,
+        "config": {
+          "itemType": "health",
+          "value": 25,
+          "collectionRadius": 32,
+          "width": 24,
+          "height": 24
+        },
+        "types": [
+          {
+            "itemType": "health",
+            "value": 25,
+            "weight": 40,
+            "name": "Health Potion"
+          },
+          {
+            "itemType": "weapon",
+            "value": 5,
+            "weight": 25,
+            "name": "Weapon Upgrade"
+          },
+          {
+            "itemType": "speed",
+            "value": 20,
+            "weight": 25,
+            "name": "Speed Boost"
+          },
+          {
+            "itemType": "key",
+            "value": 1,
+            "weight": 10,
+            "name": "Key"
+          }
+        ]
+      }
+    },
+    "dungeon_2": {
+      "type": "procedural",
+      "generator": {
+        "width": 60,
+        "height": 60,
+        "roomCount": 12,
+        "minRoomSize": 5,
+        "maxRoomSize": 12,
+        "maxAttempts": 100
+      },
+      "player": {
+        "health": 100,
+        "speed": 100,
+        "damage": 10,
+        "width": 32,
+        "height": 32
+      },
+      "enemies": {
+        "count": 8,
+        "config": {
+          "health": 40,
+          "speed": 60,
+          "damage": 15,
+          "chaseRadius": 250,
+          "attackRadius": 32,
+          "attackRate": 1.2,
+          "width": 32,
+          "height": 32
+        }
+      },
+      "items": {
+        "count": 10,
+        "config": {
+          "itemType": "health",
+          "value": 25,
+          "collectionRadius": 32,
+          "width": 24,
+          "height": 24
+        },
+        "types": [
+          {
+            "itemType": "health",
+            "value": 30,
+            "weight": 35,
+            "name": "Health Potion"
+          },
+          {
+            "itemType": "weapon",
+            "value": 8,
+            "weight": 30,
+            "name": "Weapon Upgrade"
+          },
+          {
+            "itemType": "speed",
+            "value": 25,
+            "weight": 25,
+            "name": "Speed Boost"
+          },
+          {
+            "itemType": "key",
+            "value": 1,
+            "weight": 10,
+            "name": "Key"
+          }
+        ]
+      }
+    }
+  }
+}

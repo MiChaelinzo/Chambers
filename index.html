@@ -5,24 +5,131 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skeleton Crew Framework</title>
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: #1a1a1a;
-      font-family: monospace;
+      box-sizing: border-box;
     }
-    #gameCanvas {
-      border: 2px solid #333;
-      background: #000;
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0a0a0a;
+      color: #00ff00;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 10px;
+      color: #00ff00;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 40px;
+      color: #00aa00;
+    }
+
+    .game-links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .game-card {
+      background: #1a1a1a;
+      border: 2px solid #00ff00;
+      padding: 30px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+    }
+
+    .game-card h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      color: #00ff00;
+    }
+
+    .game-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: #00aa00;
+    }
+
+    .game-card a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #00ff00;
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .game-card a:hover {
+      background: #00aa00;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    .info {
+      margin-top: 40px;
+      padding: 20px;
+      background: #1a1a1a;
+      border: 1px solid #00ff00;
+      text-align: center;
+      font-size: 12px;
+      color: #00aa00;
     }
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
-  <script type="module" src="./games/dungeon-crawler/main.js"></script>
+  <div class="container">
+    <h1>SKELETON CREW</h1>
+    <div class="subtitle">A Minimal Horror Game Framework</div>
+
+    <div class="game-links">
+      <div class="game-card">
+        <h2>Dungeon Crawler</h2>
+        <p>
+          A roguelike with procedural generation, combat, and permadeath.
+          Explore randomly generated dungeons, fight enemies, and collect items.
+        </p>
+        <a href="./games/dungeon-crawler/index.html">Play Now</a>
+      </div>
+
+      <div class="game-card">
+        <h2>Puzzle Game</h2>
+        <p>
+          A narrative-driven exploration game with fixed puzzles and checkpoints.
+          Solve mysteries and uncover the story.
+        </p>
+        <a href="#" style="opacity: 0.5; cursor: not-allowed;">Coming Soon</a>
+      </div>
+    </div>
+
+    <div class="info">
+      Both games are built using the same Skeleton Crew framework,
+      demonstrating its flexibility and reusability.
+    </div>
+  </div>
 </body>
 </html>

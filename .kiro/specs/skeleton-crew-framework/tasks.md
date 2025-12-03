@@ -138,7 +138,21 @@
   - **Validates: Requirements 2.4**
 
 
-- [ ] 10. Implement sanity system
+- [x] 10. Implement sanity system
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   - Write SanitySystem class with current and max sanity
@@ -147,34 +161,105 @@
   - Implement effect activation/deactivation based on sanity level
   - _Requirements: 2.5_
 
-- [ ] 10.1 Write property test for sanity effects
+
+
+
+
+
+
+
+-
+
+
+- [x] 10.1 Write property test for sanity effects
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   - **Property 9: Sanity threshold effects**
   - **Validates: Requirements 2.5**
 
-- [-] 11. Implement configuration loader
+- [x] 11. Implement configuration loader
+
+
+
+
 
   - Create framework/utils directory
   - Write ConfigLoader class with async JSON loading
+
   - Implement configuration validation against schemas
   - Add deep merge functionality for configuration overrides
   - Create clear error messages for validation failures
   - _Requirements: 3.1, 3.5_
 
-- [ ] 11.1 Write property test for config round-trip
+
+
+- [x] 11.1 Write property test for config round-trip
+
+
+
+
+
 
 
   - **Property 10: Configuration round-trip consistency**
+
   - **Validates: Requirements 3.1**
 
-- [ ] 11.2 Write property test for config validation
 
-  - **Property 11: Configuration validation error messages**
+
+- [x] 11.2 Write property test for config validation
+
+
+
+
+
+
+
+  - **Property 11: Configuration va
+lidation error messages**
   - **Validates: Requirements 3.5**
 -
 
+- [x] 12. Implement renderer system
 
-- [ ] 12. Implement renderer system
+
+
+
+
+
+
+
+
+- [x] 12. Implement renderer system
   - Write Renderer class with Canvas 2D context
   - Implement clear, drawEntity, and drawUI methods
   - Add camera system with position and zoom
@@ -184,19 +269,41 @@
 
 
 
-- [ ] 12.1 Write property test for render coverage
+- [x] 12.1 Write property test for render coverage
+
+
+
+
+
   - **Property 19: Render call coverage**
 
   - **Validates: Requirements 7.1, 7.4**
 
-- [ ] 12.2 Write property test for UI dat
+
+
+- [x] 12.2 Write property test for UI dat
+
+
+
+
+
 
 a completeness
   - **Property 20: UI data completeness**
   - **Validates: Requirements 7.2**
+-
+-
 
-- [ ] 13. Wire framework systems together
-  - Create Game class that integrates all framework systems
+- [x] 13. Wire framework systems together
+
+
+
+
+
+
+
+  - Create Game class that integrates all framework 
+systems
   - Connect game loop to scene updates and rendering
   - Wire input handler to player entity control
 
@@ -205,21 +312,37 @@ a completeness
   - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
 
-- [ ] 13.1 Write unit tests for system integration
+
+- [x] 13.1 Write unit tests for system integration
+
+
+
+
+
+
   - Test that game loop triggers scene updates
   - Test that input affects player entity
   - Test that visibility affects rende
 
+
 ring
   - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-- [ ] 14. Checkpoint - Ensure all tests pass
+- [x] 14. Checkpoint - Ensure all tests pass
+
+
+
+
   - Ensure all tests pass, ask the user if questions arise.
 
 
 
 
-- [ ] 15. Implement dungeon generation algorithm
+- [x] 15. Implement dungeon generation algorithm
+
+
+
+
   - Create games/dungeon-crawler/generation directory
   - Create DungeonGenerator class with room and corridor generation
   - Implement random room placement with collision detection
@@ -229,12 +352,22 @@ e reachable (connected graph)
   - _Requirements: 4.1_
 
 
-- [ ] 15.1 Write property test for dungeon connectivity
+- [x] 15.1 Write property test for dungeon connectivity
+
+
+
+
+
+
   - **Property 12: Dungeon generati
+
 on connectivity**
   - **Validates: Requirements 4.1**
 
-- [ ] 16. Create dungeon crawler entity types
+- [x] 16. Create dungeon crawler entity types
+
+
+
   - Create games/dungeon-crawler/entities directory
   - Extend Entity class to create Player entity with movement
   - Create Enemy entity with chase AI behavior
@@ -242,7 +375,15 @@ on connectivity**
   - Add collision detection between entities
   - _Requirements: 4.2, 4.4_
 
-- [ ] 17. Implement combat system for dungeon crawler
+
+- [x] 17. Implement combat system for dungeon crawler
+
+
+
+
+
+
+
 
 
   - Add health property to Player and Enemy entities
@@ -253,12 +394,29 @@ on connectivity**
 -
 
 
-- [ ] 17.1 Write property test for combat damage
-  - **Validates: Requirements 4.3**
-lication**
+
+
+- [x] 17.1 Write property test for combat damage
+
+
+
+
+
+
+
+
+
+
+
+
+  - **Property 13: Combat damage application**
   - **Validates: Requirements 4.3**
 
-- [ ] 18. Implement item collection for dungeon crawler
+
+- [x] 18. Implement item collection for dungeon crawler
+
+
+
 
   - Add inventory array to Player entity
   - Implement item pickup on collision
@@ -266,12 +424,22 @@ lication**
   - Apply item effects to player stats
   - _Requirements: 4.4_
 
-- [ ] 18.1 Write property test for item collection
+- [x] 18.1 Write property test for item collection
+
+
+
+
+
 
   - **Property 14: Item collection inventory addition**
   - **Validates: Requirements 4.4**
 
-- [ ] 19. Implement permadeath for dungeon crawler
+- [x] 19. Implement permadeath for dungeon crawler
+
+
+
+
+
 
 
   - Detect player death (health <= 0)
@@ -281,7 +449,11 @@ lication**
   - _Requirements: 4.5_
 -
 
-- [ ] 20. Create dungeon crawler configuration files
+
+- [x] 20. Create dungeon crawler configuration files
+
+
+
 
   - Create games/dungeon-crawler/config directory
   - Write game config JSON with dungeon crawler settings
@@ -290,7 +462,12 @@ lication**
   - Set visibility, resources, and mechanics parameters
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [ ] 21. Create dungeon crawler entry point
+- [x] 21. Create dungeon crawler entry point
+
+
+
+
+
 
 
   - Write main.js that loads dungeon crawler configuration
@@ -298,8 +475,15 @@ lication**
   - Set up HTML page for dungeon crawler
   - Add basic UI for health, inventory display
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
+- [x] 21.1 Write integration tests for dungeon crawler
 
-- [ ] 21.1 Write integration tests for dungeon crawler
+
+
+
+- [x] 21.1 Write integration tests for dungeon crawler
+
+
+
 
 
   - Test complete game flow from start to death
@@ -308,12 +492,21 @@ lication**
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
 
-- [ ] 22. Checkpoint - Ensure all tests pass
+- [x] 22. Checkpoint - Ensure all tests pass
+
+
+
+
 
  - Ensure all tests pass, ask the user if questions arise.
 
 
-- [ ] 23. Implement puzzle system
+- [x] 23. Implement puzzle system
+
+
+
+
+
   - Create games/puzzle-game/puzzles directory
   - Create Puzzle class with state tracking and solution validation
   - Implement condition checking for puzzle solutions
@@ -322,66 +515,76 @@ lication**
 
 etion callbacks
   - _Requirements: 5.3_
+- [x] 23.1 Write property test for puzzle validation
 
-- [ ] 23.1 Write property test for puzzle validation
+
+
+
+- [x] 23.1 Write property test for puzzle validation
+
+
+
   - **Property 15: Puzzle state validation**
   - **Validates: Requirements 5.3**
 
 
-- [ ] 24. Create puzzle game entity types
+
+- [x] 24. Create puzzle game entity types
   - Create games/puzzle-game/entities directory
   - Create InteractiveObject entity with examine and manipulate actions
   - Create Door entity with locked/unlocked states
   - Create Key entity that unlocks doors
   - Create Clue entity that reveals story text
+  - _Requirements: 5.2, 5.4_
 
-
- - _Requirements: 5.2, 5.4_
-
-- [ ] 25. Implement interaction system for puzzle game
+- [x] 25. Implement interaction system for puzzle game
   - Add interaction range checking to entities
   - Implement onInteract callbacks for puzzle entities
   - Create interaction feedback messages
-
   - Add interaction validation with error messages
   - _Requirements: 6.2, 6.5_
 
-- [ ] 25.1 Write property test for interaction range
+- [x] 25.1 Write property test for interaction range
+
   - **Property 17: Interaction range validation**
   - **Validates: Requirements 6.2, 6.5**
 
 
-- [ ] 26. Implement inventory system for puzzle game
-  - Add inventory UI data structure to player
+
+- [x] 26. Implement inventory system for puzzle game
+  - Add inventory methods to Player entity (getInventory, addToInventory)
   - Implement inventory display with item list
   - Add item selection and usage from inventory
-  - Track inventory sta
-
-te accurately
+  - Track inventory state accurately
   - _Requirements: 6.3_
 
 - [ ] 26.1 Write property test for inventory accuracy
   - **Property 18: Inventory state accuracy**
-
   - **Validates: Requirements 6.3**
 
 
-- [ ] 27. Implement save/load system for puzzle game
+- [x] 27. Implement save/load system for puzzle game
+
+
+
+
   - Create save state serialization for player, scene, and puzzles
   - Implement save to localStorage
   - Create load from localStorage with state restoration
-  - Add checkpoint trig
-gers in scenes
+  - Add checkpoint triggers in scenes
   - _Requirements: 5.5_
+-
 
-- [ ] 27.1 Write property test for save/load round-trip
+- [x] 27.1 Write property test for save/load round-trip
+
+
+
+
 
   - **Property 16: Save/load state round-trip**
   - **Validates: Requirements 5.5**
 
-
-- [ ] 28. Create fixed scene layouts for puzzle game
-
+- [x] 28. Create fixed scene layouts for puzzle game
   - Create games/puzzle-game/config directory
   - Design 3-5 puzzle room layouts in JSON format
   - Define entity placements for each room
@@ -389,11 +592,22 @@ gers in scenes
   - Add puzzle elements to each room
   - _Requirements: 5.1, 3.3_
 
-- [ ] 28.1 Write property test for scene flexibility
+- [x] 28.1 Write property test for scene flexibility
+
+
+
+
+
+
   - **Property 21: Scene system flexibility**
   - **Validates: Requirements 9.4**
 
-- [ ] 29. Create puzzle game configuration files
+- [x] 29. Create puzzle game configuration files
+
+
+
+
+
 
 
   - Write game config JSON with puzzle game settings
@@ -404,18 +618,18 @@ gers in scenes
 
 
 
-- [ ] 30. Create puzzle game entry point
+
+- [x] 30. Create puzzle game entry point
   - Write main.js that loads puzzle game configuration
   - Initialize framework Game instance with config
   - Set up HTML page for puzzle game
-
-
-
   - Add UI for inventory, interactions, and story text
-
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 30.1 Write integration tests for puzzle game
+- [x] 30.1 Write integration tests for puzzle game
+
+
+
   - Test puzzle solving flow
 
   - Test save/load functionality
@@ -426,27 +640,44 @@ gers in scenes
 - [ ] 31. Verify framework flexibility
   - Test that both games use unmodified framework code
   - Verify scene system handles both procedural and fixed content
-  - Verify game loop supports both con
-
-tinuous and turn-based modes
+  - Verify game loop supports both continuous and turn-based modes
   - _Requirements: 9.1, 9.2, 9.4, 9.5_
 
 - [ ] 31.1 Write property test for game loop flexibility
-
-
   - **Property 22: Game loop mode flexibility**
-
   - **Validates: Requirements 9.5**
 
-- [ ] 32. Final checkpoint - Ensure all tests pass
+- [x] 32. Fix failing unit and integration tests
+
+
+
+
+
+  - Fix InputHandler test failures related to event listener mocking
+  - Fix dungeon crawler entity test failures (takeDamage, collision detection)
+  - Fix integration test timing and state management issues
+  - Ensure all 454 tests pass consistently
+  - _Requirements: All_
+
+
+- [x] 33. Final checkpoint - Ensure all tests pass
+
+
 
   - Ensure all tests pass, ask the user if questions arise.
 
 
-- [ ] 33. Create README documentation
+
+- [x] 34. Create README documentation
+
+
+
 
   - Document framework architecture and systems
   - Provide guide for creating new games from framework
   - Include examples from dungeon crawler and puzzle game
   - Document configuration file formats and options
+  - Add getting started guide with setup instructions
+  - Document both game implementations (dungeon crawler and puzzle game)
+  - Add instructions for running tests and development workflow
   - _Requirements: 8.5_

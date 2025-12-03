@@ -1,0 +1,172 @@
+{
+  "entityTypes": {
+    "player": {
+      "sprite": "player.png",
+      "width": 32,
+      "height": 32,
+      "speed": 80,
+      "health": 100,
+      "collides": true,
+      "interactionRadius": 48,
+      "inventory": {
+        "maxItems": 10,
+        "startItems": []
+      },
+      "sanity": {
+        "max": 100,
+        "current": 100,
+        "drainRate": 0.5
+      }
+    },
+    "door": {
+      "sprite": "door.png",
+      "width": 32,
+      "height": 32,
+      "collides": true,
+      "locked": true,
+      "interactionRadius": 32,
+      "requiredKey": null,
+      "targetScene": null,
+      "targetX": 0,
+      "targetY": 0,
+      "openSound": "door_open.mp3",
+      "lockedSound": "door_locked.mp3"
+    },
+    "key": {
+      "sprite": "key.png",
+      "width": 24,
+      "height": 24,
+      "collides": false,
+      "collectible": true,
+      "interactionRadius": 32,
+      "keyType": "generic",
+      "name": "Key",
+      "description": "A key that might unlock something.",
+      "collectSound": "key_pickup.mp3",
+      "hidden": false
+    },
+    "clue": {
+      "sprite": "clue.png",
+      "width": 24,
+      "height": 24,
+      "collides": false,
+      "interactionRadius": 32,
+      "text": "A mysterious clue...",
+      "examined": false,
+      "name": "Clue",
+      "examineSound": "paper_rustle.mp3",
+      "revealsSanity": false,
+      "sanityEffect": 0
+    },
+    "interactive_object": {
+      "sprite": "object.png",
+      "width": 32,
+      "height": 32,
+      "collides": true,
+      "interactionRadius": 32,
+      "state": "inactive",
+      "description": "An interactive object",
+      "name": "Object",
+      "interactions": {},
+      "puzzleComponent": false,
+      "interactSound": "interact.mp3"
+    },
+    "checkpoint": {
+      "sprite": "checkpoint.png",
+      "width": 32,
+      "height": 32,
+      "collides": false,
+      "interactionRadius": 48,
+      "activated": false,
+      "name": "Checkpoint",
+      "description": "A place where you can save your progress.",
+      "autoActivate": true,
+      "saveSound": "checkpoint.mp3"
+    },
+    "wall": {
+      "sprite": "wall.png",
+      "width": 32,
+      "height": 32,
+      "collides": true,
+      "blocks": true,
+      "destructible": false
+    },
+    "floor": {
+      "sprite": "floor.png",
+      "width": 32,
+      "height": 32,
+      "collides": false,
+      "walkable": true
+    },
+    "bookshelf": {
+      "sprite": "bookshelf.png",
+      "width": 32,
+      "height": 32,
+      "collides": true,
+      "interactionRadius": 32,
+      "name": "Bookshelf",
+      "description": "A tall bookshelf filled with ancient tomes.",
+      "searchable": true,
+      "searchSound": "book_search.mp3"
+    },
+    "table": {
+      "sprite": "table.png",
+      "width": 32,
+      "height": 32,
+      "collides": true,
+      "interactionRadius": 32,
+      "name": "Table",
+      "description": "A wooden table with various items on it.",
+      "canPlaceItems": true
+    },
+    "torch": {
+      "sprite": "torch.png",
+      "width": 16,
+      "height": 32,
+      "collides": false,
+      "interactionRadius": 24,
+      "name": "Torch",
+      "description": "A flickering torch providing dim light.",
+      "lit": true,
+      "lightRadius": 64,
+      "interactable": true
+    },
+    "crystal_orb": {
+      "sprite": "crystal_orb.png",
+      "width": 32,
+      "height": 32,
+      "collides": true,
+      "interactionRadius": 32,
+      "name": "Crystal Orb",
+      "description": "A mysterious crystal orb that pulses with energy.",
+      "state": "dormant",
+      "magical": true,
+      "glowRadius": 96,
+      "interactSound": "crystal_hum.mp3"
+    },
+    "telescope": {
+      "sprite": "telescope.png",
+      "width": 32,
+      "height": 32,
+      "collides": true,
+      "interactionRadius": 32,
+      "name": "Telescope",
+      "description": "An antique telescope for stargazing.",
+      "adjustable": true,
+      "currentPosition": "center",
+      "puzzleComponent": true
+    },
+    "star_chart": {
+      "sprite": "star_chart.png",
+      "width": 32,
+      "height": 32,
+      "collides": true,
+      "interactionRadius": 32,
+      "name": "Star Chart",
+      "description": "A detailed chart of the night sky.",
+      "moveable_stars": 3,
+      "current_alignment": "random",
+      "puzzleComponent": true
+    }
+  }
+}

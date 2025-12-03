@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skeleton Crew: Dungeon Crawler</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0a0a0a;
+      color: #00ff00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    #game-container {
+      display: flex;
+      gap: 20px;
+      max-width: 1200px;
+    }
+
+    #canvas-container {
+      position: relative;
+    }
+
+    #game-canvas {
+      border: 2px solid #00ff00;
+      background: #000;
+      display: block;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    }
+
+    #ui-panel {
+      background: #1a1a1a;
+      border: 2px solid #00ff00;
+      padding: 20px;
+      min-width: 250px;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #00ff00;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: #00ff00;
+      border-bottom: 1px solid #00ff00;
+      padding-bottom: 5px;
+    }
+
+    .stat {
+      margin: 10px 0;
+    }
+
+    .stat-label {
+      font-weight: bold;
+      color: #00ff00;
+    }
+
+    .stat-bar {
+      background: #333;
+      height: 20px;
+      border: 1px solid #00ff00;
+      margin-top: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      background: #00ff00;
+      height: 100%;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    .stat-bar-fill.low {
+      background: #ff0000;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+
+    .stat-bar-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    #inventory-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    #inventory-list li {
+      padding: 8px;
+      margin: 5px 0;
+      background: #222;
+      border: 1px solid #00ff00;
+      border-radius: 3px;
+    }
+
+    #inventory-list li:empty {
+      display: none;
+    }
+
+    .empty-message {
+      color: #666;
+      font-style: italic;
+      padding: 10px;
+    }
+
+    #controls {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #00ff00;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    #death-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      border: 3px solid #ff0000;
+      padding: 30px;
+      font-size: 24px;
+      color: #ff0000;
+      text-align: center;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    }
+
+    #error-message {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 0, 0, 0.9);
+      border: 2px solid #ff0000;
+      padding: 15px;
+      color: #fff;
+      display: none;
+      z-index: 1000;
+      max-width: 80%;
+    }
+
+    .resource-item {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="canvas-container">
+      <canvas id="game-canvas" width="800" height="600"></canvas>
+      <div id="death-message">
+        YOU DIED<br>
+        <span style="font-size: 16px;">Regenerating dungeon...</span>
+      </div>
+      <div id="error-message"></div>
+    </div>
+
+    <div id="ui-panel">
+      <h1>DUNGEON CRAWLER</h1>
+
+      <div id="stats">
+        <h2>Status</h2>
+        
+        <div class="stat">
+          <div class="stat-label">Health</div>
+          <div class="stat-bar">
+            <div class="stat-bar-fill" id="health-bar" style="width: 100%"></div>
+            <div class="stat-bar-text" id="health-text">100 / 100</div>
+          </div>
+        </div>
+
+        <div id="resources-container">
+          <!-- Resources will be dynamically added here -->
+        </div>
+      </div>
+
+      <div id="inventory">
+        <h2>Inventory</h2>
+        <ul id="inventory-list">
+          <li class="empty-message">No items</li>
+        </ul>
+      </div>
+
+      <div id="controls">
+        <strong>Controls:</strong><br>
+        WASD / Arrow Keys - Move<br>
+        <br>
+        <strong>Goal:</strong><br>
+        Explore the dungeon, collect items, and survive!<br>
+        <br>
+        <strong>Warning:</strong><br>
+        Death is permanent. The dungeon will regenerate.
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

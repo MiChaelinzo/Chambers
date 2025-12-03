@@ -1,0 +1,68 @@
+{
+  "entityTypes": {
+    "player": {
+      "sprite": "player.png",
+      "width": 32,
+      "height": 32,
+      "speed": 100,
+      "health": 100,
+      "damage": 10,
+      "collides": true,
+      "name": "Player"
+    },
+    "enemy": {
+      "sprite": "enemy.png",
+      "width": 32,
+      "height": 32,
+      "speed": 50,
+      "damage": 10,
+      "health": 30,
+      "chaseRadius": 200,
+      "attackRadius": 32,
+      "attackRate": 1.0,
+      "collides": true,
+      "ai": "chase",
+      "name": "Enemy"
+    },
+    "item_health": {
+      "sprite": "health_potion.png",
+      "width": 24,
+      "height": 24,
+      "itemType": "health",
+      "value": 25,
+      "collectionRadius": 32,
+      "collides": false,
+      "name": "Health Potion"
+    },
+    "item_weapon": {
+      "sprite": "weapon_upgrade.png",
+      "width": 24,
+      "height": 24,
+      "itemType": "weapon",
+      "value": 5,
+      "collectionRadius": 32,
+      "collides": false,
+      "name": "Weapon Upgrade"
+    },
+    "item_speed": {
+      "sprite": "speed_boost.png",
+      "width": 24,
+      "height": 24,
+      "itemType": "speed",
+      "value": 20,
+      "collectionRadius": 32,
+      "collides": false,
+      "name": "Speed Boost"
+    },
+    "item_key": {
+      "sprite": "key.png",
+      "width": 24,
+      "height": 24,
+      "itemType": "key",
+      "value": 1,
+      "collectionRadius": 32,
+      "collides": false,
+      "name": "Key"
+    }
+  }
+}

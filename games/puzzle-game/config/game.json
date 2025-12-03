@@ -1,0 +1,65 @@
+{
+  "game": {
+    "title": "Skeleton Crew: Puzzle Game",
+    "startScene": "entrance_hall",
+    "visibility": {
+      "mode": "circular",
+      "radius": 8
+    },
+    "resources": [
+      { "name": "sanity", "max": 100, "start": 100, "depleteRate": 0.5 }
+    ],
+    "mechanics": {
+      "permadeath": false,
+      "checkpoints": true,
+      "combat": false,
+      "inventory": true,
+      "interactions": true,
+      "puzzles": true,
+      "saveLoad": true
+    },
+    "audio": {
+      "ambient": "puzzle_ambient.mp3",
+      "effects": {
+        "interact": "interact.mp3",
+        "collect": "pickup.mp3",
+        "unlock": "unlock.mp3",
+        "puzzle_solve": "puzzle_complete.mp3",
+        "checkpoint": "save.mp3",
+        "examine": "examine.mp3"
+      }
+    },
+    "threat": {
+      "detectionRadius": 0
+    },
+    "sanity": {
+      "max": 100,
+      "start": 100,
+      "effects": [
+        {
+          "threshold": 75,
+          "effect": "subtle_whispers"
+        },
+        {
+          "threshold": 50,
+          "effect": "shadow_movement"
+        },
+        {
+          "threshold": 25,
+          "effect": "hallucinations"
+        }
+      ]
+    },
+    "ui": {
+      "showInventory": true,
+      "showSanity": true,
+      "showInteractionPrompts": true,
+      "showStoryText": true
+    },
+    "progression": {
+      "type": "checkpoint",
+      "autoSave": true,
+      "saveSlots": 3
+    }
+  }
+}

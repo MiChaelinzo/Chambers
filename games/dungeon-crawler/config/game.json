@@ -1,0 +1,54 @@
+{
+  "game": {
+    "title": "Skeleton Crew: Dungeon Crawler",
+    "startScene": "dungeon_1",
+    "visibility": {
+      "mode": "circular",
+      "radius": 150
+    },
+    "resources": [
+      {
+        "name": "health",
+        "max": 100,
+        "start": 100
+      },
+      {
+        "name": "stamina",
+        "max": 100,
+        "start": 100,
+        "depleteRate": 0.5
+      }
+    ],
+    "mechanics": {
+      "permadeath": true,
+      "checkpoints": false,
+      "combat": true
+    },
+    "audio": {
+      "ambient": "dungeon_ambient.mp3",
+      "effects": {
+        "attack": "sword_swing.mp3",
+        "damage": "hit.mp3",
+        "collect": "pickup.mp3",
+        "death": "death.mp3"
+      }
+    },
+    "threat": {
+      "detectionRadius": 200
+    },
+    "sanity": {
+      "max": 100,
+      "start": 100,
+      "effects": [
+        {
+          "threshold": 50,
+          "effect": "screen_shake"
+        },
+        {
+          "threshold": 25,
+          "effect": "hallucinations"
+        }
+      ]
+    }
+  }
+}

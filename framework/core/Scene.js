@@ -114,10 +114,10 @@ export class Scene {
 
   /**
    * Get all entities in the scene
-   * @returns {Array<Entity>} Array of all entities
+   * @returns {Array<Entity>} Array of all entities (excluding deleted ones)
    */
   getAllEntities() {
-    return Array.from(this.entities.values());
+    return Array.from(this.entities.values()).filter(e => !e.isDeleted());
   }
 
   /**

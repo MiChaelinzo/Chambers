@@ -6,6 +6,8 @@ HTMLCanvasElement.prototype.getContext = function() {
     fillStyle: '',
     strokeStyle: '',
     lineWidth: 1,
+    font: '',
+    textAlign: '',
     fillRect: jest.fn(),
     clearRect: jest.fn(),
     strokeRect: jest.fn(),
@@ -21,6 +23,7 @@ HTMLCanvasElement.prototype.getContext = function() {
     translate: jest.fn(),
     scale: jest.fn(),
     rotate: jest.fn(),
+    setTransform: jest.fn(),
     drawImage: jest.fn(),
     measureText: jest.fn(() => ({ width: 0 })),
     fillText: jest.fn(),
@@ -46,3 +49,9 @@ global.AudioContext = jest.fn().mockImplementation(() => ({
 // Mock requestAnimationFrame
 global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 16));
 global.cancelAnimationFrame = jest.fn((id) => clearTimeout(id));
+
+// Mock window object for input handling
+global.window = {
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn()
+};
