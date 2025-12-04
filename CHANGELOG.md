@@ -131,7 +131,76 @@ All notable changes to the Skeleton Crew Framework will be documented in this fi
 
 ---
 
+## [3.0.0] - 2024-12-03
+
+### Added - Major Feature Release
+
+#### 🌟 Lighting System (`framework/systems/LightingSystem.js`)
+- Dynamic lighting with point lights and spotlights
+- Real-time shadow casting
+- Flickering lights for atmospheric effects
+- Ambient light control
+- Color-tinted lights
+- Performance-optimized rendering
+
+#### 🧭 Pathfinding System (`framework/ai/Pathfinding.js`)
+- A* pathfinding algorithm
+- Grid-based navigation
+- Diagonal movement support
+- Path smoothing
+- Line-of-sight checks
+- Dynamic obstacle management
+- Debug visualization
+
+#### 💬 Dialogue System (`framework/systems/DialogueSystem.js`)
+- Branching conversation trees
+- Conditional dialogue nodes
+- Choice-based interactions
+- Variable system for tracking state
+- Dialogue history
+- Save/load dialogue state
+- Event callbacks
+
+#### 🎯 Quest System (`framework/systems/QuestSystem.js`)
+- Quest and objective tracking
+- Quest chains and prerequisites
+- Repeatable quests
+- Time-limited quests
+- Quest categories and levels
+- Reward system
+- Progress tracking
+- Save/load quest state
+
+#### 🤖 Behavior Tree System (`framework/ai/BehaviorTree.js`)
+- Complete behavior tree implementation
+- Composite nodes: Sequence, Selector, Parallel
+- Decorator nodes: Inverter, Repeater, UntilFail, Succeeder
+- Action and Condition nodes
+- Fluent builder API
+- Reusable AI behaviors
+
+### Changed
+
+#### Game Class Updates
+- Integrated all 5 new systems
+- Added getter methods for new systems
+- Updated `_update()` to update new systems
+- Enhanced configuration options
+
+### Performance
+
+- Lighting system uses off-screen canvas for optimization
+- Pathfinding uses A* with heuristics for efficiency
+- Behavior trees support complex AI without performance impact
+
+### Documentation
+
+- Comprehensive API documentation for all new systems
+- Integration examples
+- Best practices guide
+
 ## Version History
 
+- **3.0.0** - Added Lighting, Pathfinding, Dialogue, Quest, and Behavior Tree systems
 - **2.0.0** - Added Particle System, Animation System, Spatial Grid
 - **1.0.0** - Initial release with core framework and example games

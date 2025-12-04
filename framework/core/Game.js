@@ -14,6 +14,10 @@ import { ThreatSystem } from '../mechanics/ThreatSystem.js';
 import { ParticleSystem } from '../systems/ParticleSystem.js';
 import { AnimationSystem } from '../systems/AnimationSystem.js';
 import { SpatialGrid } from '../utils/SpatialGrid.js';
+import { LightingSystem } from '../systems/LightingSystem.js';
+import { DialogueSystem } from '../systems/DialogueSystem.js';
+import { QuestSystem } from '../systems/QuestSystem.js';
+import { Pathfinding } from '../ai/Pathfinding.js';
 
 /**
  * Game class - Central coordinator for all framework systems
@@ -51,11 +55,21 @@ export class Game {
     this.audioSystem = new AudioSystem();
     this.threatSystem = new ThreatSystem(config.threat || {});
     
-    // Initialize new systems
+    // Initialize new systems (v2.0)
     this.particleSystem = new ParticleSystem(config.particles || {});
     this.animationSystem = new AnimationSystem();
     this.spatialGrid = new SpatialGrid({
       cellSize: config.spatialGridCellSize || 100,
+      worldWidth: config.worldWidth || 2000,
+      worldHeight: config.worldHeight || 2000
+    });
+    
+    // Initialize advanced systems (v3.0)
+    this.lightingSystem = new LightingSystem(config.lighting || {});
+    this.dialogueSystem = new DialogueSystem();
+    this.questSystem = new QuestSystem();
+    this.pathfinding = new Pathfinding({
+      gridSize: config.pathfindingGridSize || 32,
       worldWidth: config.worldWidth || 2000,
       worldHeight: config.worldHeight || 2000
     });
@@ -166,6 +180,12 @@ export class Game {
     
     // Update animation system
     this.animationSystem.update(deltaTime);
+    
+    // Update lighting system
+    this.lightingSystem.update(deltaTime);
+    
+    // Update quest system
+    this.questSystem.update(deltaTime);
 
     // Check for player death (permadeath)
     if (this.player && this.player.isDead && this.player.isDead()) {
@@ -416,6 +436,38 @@ export class Game {
    */
   getSpatialGrid() {
     return this.spatialGrid;
+  }
+
+  /**
+   * Get the lighting system
+   * @returns {LightingSystem}
+   */
+  getLightingSystem() {
+    return this.lightingSystem;
+  }
+
+  /**
+   * Get the dialogue system
+   * @returns {DialogueSystem}
+   */
+  getDialogueSystem() {
+    return this.dialogueSystem;
+  }
+
+  /**
+   * Get the quest system
+   * @returns {QuestSystem}
+   */
+  getQuestSystem() {
+    return this.questSystem;
+  }
+
+  /**
+   * Get the pathfinding system
+   * @returns {Pathfinding}
+   */
+  getPathfinding() {
+    return this.pathfinding;
   }
 
   /**

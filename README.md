@@ -16,9 +16,18 @@ Skeleton Crew is a flexible, configuration-driven game framework designed specif
 - ⚙️ Configuration-driven design (no code changes needed)
 - 🧪 Comprehensive test suite with property-based testing
 - 🎨 Two complete example games included
-- ✨ **NEW:** Particle system for atmospheric effects
-- 🎬 **NEW:** Animation system with tweening and effects
-- ⚡ **NEW:** Spatial partitioning for performance optimization
+
+**v2.0 Features:**
+- ✨ Particle system for atmospheric effects
+- 🎬 Animation system with tweening and effects
+- ⚡ Spatial partitioning for performance optimization
+
+**v3.0 Features (NEW!):**
+- 🌟 Dynamic lighting with shadows
+- 🧭 A* pathfinding for AI navigation
+- 💬 Branching dialogue system
+- 🎯 Quest and objective tracking
+- 🤖 Behavior tree AI system
 
 ## 📦 What's Included
 
