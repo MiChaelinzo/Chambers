@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v3.1 Features Demo - SaveSystem & AchievementSystem</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #ff6b6b;
+      text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+    }
+    .section {
+      background: #2a2a2a;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    h2 {
+      color: #4ecdc4;
+      margin-top: 0;
+    }
+    button {
+      background: #4ecdc4;
+      color: #1a1a1a;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 5px;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #45b7aa;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(78, 205, 196, 0.3);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .output {
+      background: #1a1a1a;
+      border: 1px solid #3a3a3a;
+      border-radius: 5px;
+      padding: 15px;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .achievement {
+      background: #3a3a3a;
+      border-left: 4px solid #4ecdc4;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .achievement.unlocked {
+      border-left-color: #95e1d3;
+      background: #2d4a45;
+    }
+    .achievement .name {
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    .achievement .description {
+      color: #999;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+    .achievement .status {
+      background: #ff6b6b;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-size: 11px;
+    }
+    .achievement.unlocked .status {
+      background: #95e1d3;
+      color: #1a1a1a;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 5px 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4ecdc4, #45b7aa);
+      transition: width 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .save-slot {
+      background: #3a3a3a;
+      border: 2px solid #4a4a4a;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .save-slot:hover {
+      border-color: #4ecdc4;
+      transform: translateX(5px);
+    }
+    .save-slot.empty {
+      opacity: 0.5;
+    }
+    .save-slot .slot-number {
+      color: #4ecdc4;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .save-slot .slot-info {
+      color: #999;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+    }
+    .stat-card {
+      background: #3a3a3a;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    .stat-label {
+      color: #999;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎮 Skeleton Crew v3.1 Features Demo</h1>
+    
+    <!-- SaveSystem Demo -->
+    <div class="section">
+      <h2>💾 SaveSystem</h2>
+      <p>Test the save/load functionality with multiple slots and auto-save.</p>
+      
+      <div class="controls">
+        <button onclick="generateGameState()">🎲 Generate Random Game State</button>
+        <button onclick="saveToSlot(0)">💾 Save to Slot 1</button>
+        <button onclick="saveToSlot(1)">💾 Save to Slot 2</button>
+        <button onclick="saveToSlot(2)">💾 Save to Slot 3</button>
+        <button onclick="toggleAutoSave()">⏰ Toggle Auto-Save</button>
+        <button onclick="showAllSaves()">📋 Show All Saves</button>
+        <button onclick="deleteAllSaves()">🗑️ Delete All Saves</button>
+      </div>
+      
+      <div id="saveSlots"></div>
+      
+      <div class="output" id="saveOutput">
+        <div style="color: #999;">SaveSystem ready. Click buttons above to test functionality.</div>
+      </div>
+    </div>
+
+    <!-- AchievementSystem Demo -->
+    <div class="section">
+      <h2>🏆 AchievementSystem</h2>
+      <p>Unlock achievements and track progress across different types.</p>
+      
+      <div class="controls">
+        <button onclick="simulateAction('kill')">⚔️ Kill Enemy</button>
+        <button onclick="simulateAction('collect')">💎 Collect Item</button>
+        <button onclick="simulateAction('explore')">🗺️ Explore Area</button>
+        <button onclick="simulateAction('die')">💀 Die</button>
+        <button onclick="simulateAction('secret')">🔍 Find Secret</button>
+        <button onclick="resetAchievements()">🔄 Reset Achievements</button>
+      </div>
+      
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-value" id="achievementCount">0/0</div>
+          <div class="stat-label">Achievements Unlocked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="achievementPercentage">0%</div>
+          <div class="stat-label">Completion</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="enemyKills">0</div>
+          <div class="stat-label">Enemies Killed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="itemsCollected">0</div>
+          <div class="stat-label">Items Collected</div>
+        </div>
+      </div>
+      
+      <div id="achievementsList"></div>
+      
+      <div class="output" id="achievementOutput">
+        <div style="color: #999;">AchievementSystem ready. Perform actions above to unlock achievements.</div>
+      </div>
+    </div>
+
+    <!-- Enhanced Audio Demo -->
+    <div class="section">
+      <h2>🔊 Enhanced AudioSystem</h2>
+      <p>Test new audio features: fade in/out, spatial audio, volume control.</p>
+      
+      <div class="controls">
+        <button onclick="testFadeIn()">▶️ Fade In (Simulated)</button>
+        <button onclick="testFadeOut()">⏸️ Fade Out (Simulated)</button>
+        <button onclick="testSpatialAudio()">📍 Spatial Audio (Simulated)</button>
+        <button onclick="testVolumeControl()">🔊 Volume Control (Simulated)</button>
+      </div>
+      
+      <div class="output" id="audioOutput">
+        <div style="color: #999;">Enhanced AudioSystem ready. Note: Audio features are simulated in this demo.</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { SaveSystem } from '../framework/utils/SaveSystem.js';
+    import { AchievementSystem } from '../framework/systems/AchievementSystem.js';
+
+    // Initialize systems
+    const saveSystem = new SaveSystem({
+      gameId: 'v31_demo',
+      maxSlots: 3,
+      autoSave: false
+    });
+
+    const achievementSystem = new AchievementSystem({
+      gameId: 'v31_demo',
+      enableNotifications: true
+    });
+
+    // Game state
+    let gameState = {
+      player: { x: 0, y: 0, health: 100 },
+      level: 1,
+      score: 0,
+      enemyKills: 0,
+      itemsCollected: 0,
+      areasExplored: 0,
+      deaths: 0
+    };
+
+    let autoSaveEnabled = false;
+    let autoSaveInterval = null;
+
+    // Register achievements
+    achievementSystem.registerAchievement({
+      id: 'first_kill',
+      name: 'First Blood',
+      description: 'Defeat your first enemy',
+      type: 'simple'
+    });
+
+    achievementSystem.registerAchievement({
+      id: 'kill_10',
+      name: 'Warrior',
+      description: 'Defeat 10 enemies',
+      type: 'progress',
+      target: 10
+    });
+
+    achievementSystem.registerAchievement({
+      id: 'collector',
+      name: 'Collector',
+      description: 'Collect 50 items',
+      type: 'progress',
+      target: 50
+    });
+
+    achievementSystem.registerAchievement({
+      id: 'explorer',
+      name: 'Explorer',
+      description: 'Explore 20 areas',
+      type: 'progress',
+      target: 20
+    });
+
+    achievementSystem.registerAchievement({
+      id: 'survivor',
+      name: 'Survivor',
+      description: 'Die less than 5 times',
+      type: 'challenge'
+    });
+
+    achievementSystem.registerAchievement({
+      id: 'secret_room',
+      name: 'Secret Seeker',
+      description: 'Find the hidden chamber',
+      type: 'secret',
+      hidden: true
+    });
+
+    // Achievement callbacks
+    achievementSystem.onUnlock((achievement) => {
+      logAchievement(`🏆 Achievement Unlocked: ${achievement.name}!`);
+      updateAchievementDisplay();
+    });
+
+    achievementSystem.onProgress((achievement, current, target) => {
+      updateAchievementDisplay();
+    });
+
+    // Global functions
+    window.generateGameState = function() {
+      gameState = {
+        player: {
+          x: Math.floor(Math.random() * 1000),
+          y: Math.floor(Math.random() * 1000),
+          health: Math.floor(Math.random() * 100)
+        },
+        level: Math.floor(Math.random() * 10) + 1,
+        score: Math.floor(Math.random() * 10000),
+        enemyKills: gameState.enemyKills,
+        itemsCollected: gameState.itemsCollected,
+        areasExplored: gameState.areasExplored,
+        deaths: gameState.deaths
+      };
+      logSave('Generated random game state: ' + JSON.stringify(gameState, null, 2));
+    };
+
+    window.saveToSlot = function(slot) {
+      const metadata = {
+        level: gameState.level,
+        score: gameState.score,
+        health: gameState.player.health
+      };
+      
+      const success = saveSystem.save(slot, gameState, metadata);
+      if (success) {
+        logSave(`✅ Saved to slot ${slot + 1}`);
+        showAllSaves();
+      } else {
+        logSave(`❌ Failed to save to slot ${slot + 1}`);
+      }
+    };
+
+    window.showAllSaves = function() {
+      const saves = saveSystem.getAllSaveMetadata();
+      const container = document.getElementById('saveSlots');
+      
+      container.innerHTML = saves.map((save, slot) => {
+        if (save) {
+          const date = new Date(save.timestamp);
+          return `
+            <div class="save-slot" onclick="loadFromSlot(${slot})">
+              <div class="slot-number">Slot ${slot + 1}</div>
+              <div class="slot-info">
+                Level: ${save.metadata.level} | Score: ${save.metadata.score} | Health: ${save.metadata.health}<br>
+                Saved: ${date.toLocaleString()}
+              </div>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="save-slot empty">
+              <div class="slot-number">Slot ${slot + 1}</div>
+              <div class="slot-info">Empty slot - click "Save to Slot ${slot + 1}" to save here</div>
+            </div>
+          `;
+        }
+      }).join('');
+    };
+
+    window.loadFromSlot = function(slot) {
+      const loaded = saveSystem.load(slot);
+      if (loaded) {
+        gameState = loaded.gameState;
+        logSave(`✅ Loaded from slot ${slot + 1}: ` + JSON.stringify(loaded.gameState, null, 2));
+        logSave(`Metadata: ` + JSON.stringify(loaded.metadata, null, 2));
+      } else {
+        logSave(`❌ No save data in slot ${slot + 1}`);
+      }
+    };
+
+    window.deleteAllSaves = function() {
+      if (confirm('Delete all save data?')) {
+        saveSystem.deleteAllSaves();
+        logSave('🗑️ All saves deleted');
+        showAllSaves();
+      }
+    };
+
+    window.toggleAutoSave = function() {
+      autoSaveEnabled = !autoSaveEnabled;
+      
+      if (autoSaveEnabled) {
+        saveSystem.startAutoSave(() => gameState, 0);
+        logSave('⏰ Auto-save enabled (saving to slot 1 every 10 seconds)');
+      } else {
+        saveSystem.stopAutoSave();
+        logSave('⏸️ Auto-save disabled');
+      }
+    };
+
+    window.simulateAction = function(action) {
+      switch(action) {
+        case 'kill':
+          gameState.enemyKills++;
+          gameState.score += 100;
+          document.getElementById('enemyKills').textContent = gameState.enemyKills;
+          achievementSystem.unlock('first_kill');
+          achievementSystem.incrementProgress('kill_10');
+          logAchievement(`⚔️ Enemy killed! Total: ${gameState.enemyKills}`);
+          break;
+          
+        case 'collect':
+          gameState.itemsCollected++;
+          gameState.score += 50;
+          document.getElementById('itemsCollected').textContent = gameState.itemsCollected;
+          achievementSystem.incrementProgress('collector');
+          logAchievement(`💎 Item collected! Total: ${gameState.itemsCollected}`);
+          break;
+          
+        case 'explore':
+          gameState.areasExplored++;
+          gameState.score += 200;
+          achievementSystem.incrementProgress('explorer');
+          logAchievement(`🗺️ Area explored! Total: ${gameState.areasExplored}`);
+          break;
+          
+        case 'die':
+          gameState.deaths++;
+          gameState.player.health = 100;
+          if (gameState.deaths < 5) {
+            achievementSystem.unlock('survivor');
+          }
+          logAchievement(`💀 You died! Total deaths: ${gameState.deaths}`);
+          break;
+          
+        case 'secret':
+          achievementSystem.unlock('secret_room');
+          gameState.score += 1000;
+          logAchievement(`🔍 Secret found!`);
+          break;
+      }
+      
+      updateAchievementDisplay();
+    };
+
+    window.resetAchievements = function() {
+      if (confirm('Reset all achievements?')) {
+        achievementSystem.reset();
+        gameState.enemyKills = 0;
+        gameState.itemsCollected = 0;
+        gameState.areasExplored = 0;
+        gameState.deaths = 0;
+        document.getElementById('enemyKills').textContent = '0';
+        document.getElementById('itemsCollected').textContent = '0';
+        logAchievement('🔄 All achievements reset');
+        updateAchievementDisplay();
+      }
+    };
+
+    window.testFadeIn = function() {
+      logAudio('▶️ Fade in: Starting ambient music, fading from 0 to 0.7 over 2 seconds...');
+      setTimeout(() => logAudio('✅ Fade in complete!'), 2000);
+    };
+
+    window.testFadeOut = function() {
+      logAudio('⏸️ Fade out: Fading ambient music from current volume to 0 over 3 seconds...');
+      setTimeout(() => logAudio('✅ Fade out complete, music stopped'), 3000);
+    };
+
+    window.testSpatialAudio = function() {
+      logAudio('📍 Spatial audio: Playing sound at position (500, 300), listener at (100, 100)');
+      logAudio('   Distance: ~577 pixels, volume adjusted based on distance');
+      logAudio('   Moving source closer...');
+      setTimeout(() => {
+        logAudio('   Distance: ~350 pixels, volume increased');
+      }, 1000);
+      setTimeout(() => {
+        logAudio('   Distance: ~200 pixels, volume at maximum range');
+      }, 2000);
+    };
+
+    window.testVolumeControl = function() {
+      logAudio('🔊 Volume control: Setting ambient to 0.5...');
+      setTimeout(() => {
+        logAudio('   Current volume: 0.5');
+        logAudio('   Fading to 0.8 over 1 second...');
+      }, 500);
+      setTimeout(() => {
+        logAudio('   Current volume: 0.8');
+      }, 1500);
+    };
+
+    function updateAchievementDisplay() {
+      const stats = achievementSystem.getStats();
+      document.getElementById('achievementCount').textContent = `${stats.unlocked}/${stats.total}`;
+      document.getElementById('achievementPercentage').textContent = `${Math.round(stats.percentage)}%`;
+      
+      const achievements = achievementSystem.getAllAchievements(true);
+      const container = document.getElementById('achievementsList');
+      
+      container.innerHTML = achievements.map(ach => {
+        let statusHtml = ach.unlocked 
+          ? '<span class="status">UNLOCKED</span>' 
+          : '<span class="status">LOCKED</span>';
+        
+        let progressHtml = '';
+        if (ach.type === 'progress' && !ach.unlocked) {
+          const progress = achievementSystem.getProgress(ach.id);
+          progressHtml = `
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progress.percentage}%">
+                ${progress.current}/${progress.target}
+              </div>
+            </div>
+          `;
+        }
+        
+        return `
+          <div class="achievement ${ach.unlocked ? 'unlocked' : ''}">
+            <div>
+              <div class="name">${ach.name}</div>
+              <div class="description">${ach.description}</div>
+              ${progressHtml}
+            </div>
+            ${statusHtml}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function logSave(message) {
+      const output = document.getElementById('saveOutput');
+      const timestamp = new Date().toLocaleTimeString();
+      output.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function logAchievement(message) {
+      const output = document.getElementById('achievementOutput');
+      const timestamp = new Date().toLocaleTimeString();
+      output.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function logAudio(message) {
+      const output = document.getElementById('audioOutput');
+      const timestamp = new Date().toLocaleTimeString();
+      output.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+      output.scrollTop = output.scrollHeight;
+    }
+
+    // Initialize displays
+    showAllSaves();
+    updateAchievementDisplay();
+  </script>
+</body>
+</html>

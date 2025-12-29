@@ -777,3 +777,218 @@ Configure new systems in your game config:
 
 See `examples/new-features-demo.html` for an interactive demonstration of all new features.
 
+## 🆕 New Features (v3.1)
+
+### SaveSystem
+
+Comprehensive save/load system for game state persistence using localStorage.
+
+```javascript
+import { SaveSystem } from './framework/utils/SaveSystem.js';
+
+// Initialize save system
+const saveSystem = new SaveSystem({
+  gameId: 'my_horror_game',
+  maxSlots: 3,
+  autoSave: true,
+  autoSaveInterval: 60000 // 1 minute
+});
+
+// Save game state
+const gameState = {
+  player: { x: 100, y: 200, health: 80 },
+  level: 5,
+  inventory: ['key', 'flashlight']
+};
+
+const metadata = {
+  playerName: 'Player1',
+  playtime: 3600,
+  levelName: 'Dark Corridor'
+};
+
+saveSystem.save(0, gameState, metadata);
+
+// Load game state
+const savedData = saveSystem.load(0);
+if (savedData) {
+  console.log('Loaded game:', savedData.gameState);
+  console.log('Metadata:', savedData.metadata);
+}
+
+// Check if save exists
+if (saveSystem.hasSave(0)) {
+  console.log('Save slot 0 has data');
+}
+
+// Get all save metadata
+const allSaves = saveSystem.getAllSaveMetadata();
+allSaves.forEach((save, slot) => {
+  if (save) {
+    console.log(`Slot ${slot}: ${save.metadata.playerName} - ${save.metadata.levelName}`);
+  }
+});
+
+// Export/Import for backup
+const exportedData = saveSystem.exportSave(0);
+saveSystem.importSave(1, exportedData); // Copy to slot 1
+
+// Auto-save
+saveSystem.startAutoSave(() => {
+  return getCurrentGameState(); // Your function to get current state
+}, 0);
+
+// Storage statistics
+const stats = saveSystem.getStorageStats();
+console.log(`Using ${stats.totalSize} bytes across ${stats.slotsUsed} slots`);
+```
+
+### AchievementSystem
+
+Track player accomplishments with support for progress tracking, secret achievements, and rewards.
+
+```javascript
+import { AchievementSystem } from './framework/systems/AchievementSystem.js';
+
+// Initialize achievement system
+const achievements = new AchievementSystem({
+  gameId: 'my_horror_game',
+  enableNotifications: true,
+  notificationDuration: 3000
+});
+
+// Register achievements
+achievements.registerAchievement({
+  id: 'first_kill',
+  name: 'First Blood',
+  description: 'Defeat your first enemy',
+  type: 'simple'
+});
+
+achievements.registerAchievement({
+  id: 'kill_100',
+  name: 'Centurion',
+  description: 'Defeat 100 enemies',
+  type: 'progress',
+  target: 100,
+  reward: { gold: 500, item: 'legendary_sword' }
+});
+
+achievements.registerAchievement({
+  id: 'secret_room',
+  name: '???',
+  description: 'Find the hidden chamber',
+  type: 'secret',
+  hidden: true
+});
+
+// Unlock simple achievement
+achievements.unlock('first_kill');
+
+// Update progress achievement
+achievements.incrementProgress('kill_100', 1); // Increment by 1
+achievements.updateProgress('kill_100', 50);   // Set to 50
+
+// Check achievement status
+if (achievements.isUnlocked('first_kill')) {
+  console.log('Achievement unlocked!');
+}
+
+// Get progress
+const progress = achievements.getProgress('kill_100');
+console.log(`Progress: ${progress.current}/${progress.target} (${progress.percentage}%)`);
+
+// Get all achievements
+const allAchievements = achievements.getAllAchievements();
+allAchievements.forEach(achievement => {
+  console.log(`${achievement.name}: ${achievement.unlocked ? 'Unlocked' : 'Locked'}`);
+});
+
+// Get statistics
+const stats = achievements.getStats();
+console.log(`Unlocked ${stats.unlocked}/${stats.total} achievements (${stats.percentage}%)`);
+
+// Register callbacks
+achievements.onUnlock((achievement) => {
+  console.log(`Achievement unlocked: ${achievement.name}`);
+  if (achievement.reward) {
+    giveRewardToPlayer(achievement.reward);
+  }
+});
+
+achievements.onProgress((achievement, current, target) => {
+  console.log(`${achievement.name}: ${current}/${target}`);
+});
+```
+
+**Achievement Types:**
+- `simple` - One-time unlock achievements
+- `progress` - Track incremental progress towards a goal
+- `secret` - Hidden until unlocked
+- `challenge` - Difficult achievements with special requirements
+
+### Enhanced Audio System
+
+New audio features for better sound control and spatial audio.
+
+```javascript
+// Preload multiple sounds
+await audio.preloadSounds([
+  { id: 'bgm1', url: 'music/theme.mp3' },
+  { id: 'footstep', url: 'sfx/footstep.wav' },
+  { id: 'scream', url: 'sfx/scream.wav' }
+]);
+
+// Fade in ambient music
+audio.fadeInAmbient('bgm1', 0.7, 2.0); // Fade to 0.7 volume over 2 seconds
+
+// Fade out ambient music
+audio.fadeOutAmbient(3.0); // Fade out over 3 seconds
+
+// Fade to new volume
+audio.fadeAmbientTo(0.3, 1.0); // Fade to 0.3 volume over 1 second
+
+// Spatial audio (distance-based volume)
+const audioObj = audio.playSpatialSound(
+  'footstep',
+  { x: 500, y: 300 }, // Sound source position
+  { x: 100, y: 100 }, // Listener position
+  1.0,                // Max volume
+  false               // Don't loop
+);
+
+// Update spatial audio as positions change
+audio.updateSpatialSound(
+  audioObj,
+  { x: 450, y: 300 }, // New source position
+  { x: 150, y: 100 }, // New listener position
+  1.0
+);
+
+// Ambient volume control
+audio.setAmbientVolume(0.5);
+const currentVolume = audio.getAmbientVolume();
+```
+
+### Configuration Updates
+
+Add new systems to your game configuration:
+
+```json
+{
+  "game": {
+    "particles": {
+      "maxParticles": 2000
+    },
+    "spatialGridCellSize": 100,
+    "worldWidth": 2000,
+    "worldHeight": 2000,
+    "audio": {
+      "enableSpatialAudio": true,
+      "maxDistance": 1000
+    }
+  }
+}
+```
+
+
