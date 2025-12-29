@@ -201,6 +201,118 @@ All notable changes to the Skeleton Crew Framework will be documented in this fi
 
 ## Version History
 
+- **3.1.0** - Added SaveSystem, AchievementSystem, Enhanced AudioSystem, Updated dependencies
 - **3.0.0** - Added Lighting, Pathfinding, Dialogue, Quest, and Behavior Tree systems
 - **2.0.0** - Added Particle System, Animation System, Spatial Grid
 - **1.0.0** - Initial release with core framework and example games
+
+---
+
+## [3.1.0] - 2024-12-29
+
+### Added
+
+#### 💾 SaveSystem (`framework/utils/SaveSystem.js`)
+- Complete save/load system for game state persistence
+- localStorage-based storage with fallback detection
+- Multiple save slots (configurable, default: 3)
+- Auto-save functionality with configurable intervals
+- Save state serialization and deserialization
+- Export/import saves for backup and sharing
+- Save metadata tracking (timestamp, custom metadata)
+- Storage statistics and monitoring
+- **54 comprehensive unit tests**
+
+**Key Features:**
+- Multiple independent save slots
+- Auto-save with customizable interval
+- Import/export for backup
+- Storage usage statistics
+- Validates save slot numbers
+- Graceful handling of unavailable storage
+
+#### 🏆 AchievementSystem (`framework/systems/AchievementSystem.js`)
+- Comprehensive achievement tracking system
+- Multiple achievement types: simple, progress, secret, challenge
+- Progress tracking with percentage calculation
+- Achievement persistence using localStorage
+- Callback system for unlock and progress events
+- Hidden/secret achievements
+- Achievement rewards system
+- Statistics tracking
+- **32 comprehensive unit tests**
+
+**Achievement Types:**
+- **Simple** - One-time unlock achievements
+- **Progress** - Incremental progress tracking with targets
+- **Secret** - Hidden achievements until unlocked
+- **Challenge** - Special difficulty achievements
+
+**Key Features:**
+- Unlock notifications (customizable)
+- Progress incrementation
+- Achievement statistics
+- Callback events (onUnlock, onProgress)
+- Persistent storage with gameId
+- Hidden achievements support
+- Reward metadata
+
+#### 🔊 Enhanced AudioSystem
+- Audio preloading functionality (`preloadSounds`)
+- Fade in/out for ambient music
+- Spatial audio support (distance-based volume)
+- Ambient volume control methods
+- Improved error handling
+
+**New Methods:**
+- `preloadSounds(sounds)` - Batch load multiple sounds
+- `fadeInAmbient(id, targetVolume, duration)` - Fade in ambient music
+- `fadeOutAmbient(duration, stopAfterFade)` - Fade out ambient music
+- `fadeAmbientTo(targetVolume, duration)` - Fade to new volume
+- `playSpatialSound(id, sourcePos, listenerPos, maxVolume, loop)` - Distance-based audio
+- `updateSpatialSound(audioObj, sourcePos, listenerPos, maxVolume)` - Update spatial audio
+- `setAmbientVolume(volume)` - Set ambient volume
+- `getAmbientVolume()` - Get current ambient volume
+
+### Changed
+
+#### Dependencies Updated
+- **Jest** updated from 29.7.0 to 30.2.0
+- **@jest/globals** updated from 29.7.0 to 30.2.0
+- **jest-environment-jsdom** updated from 29.7.0 to 30.2.0
+- **fast-check** updated from 3.23.2 to 4.5.2
+
+All tests passing with new versions (507 tests)
+
+#### Configuration
+- Added `audio.enableSpatialAudio` config option
+- Added `audio.maxDistance` config option for spatial audio range
+
+### Documentation
+
+#### Updated Files
+- `README.md` - Added comprehensive v3.1 feature documentation
+  - SaveSystem usage examples and API
+  - AchievementSystem usage examples and API
+  - Enhanced AudioSystem features
+  - Configuration examples
+- `CHANGELOG.md` - This file with v3.1 release notes
+- `.gitignore` - Added node_modules and package-lock.json
+
+### Testing
+
+- Added 22 unit tests for SaveSystem
+- Added 32 unit tests for AchievementSystem
+- All 507 existing tests still passing
+- Total: 561 tests passing
+- Maintained backward compatibility
+- No breaking changes to existing API
+
+### Performance
+
+- SaveSystem uses localStorage with efficient key-based storage
+- AchievementSystem optimized with Map/Set data structures
+- Spatial audio calculations optimized for performance
+- Minimal overhead from new systems
+
+
