@@ -2,6 +2,10 @@
  * SaveSystem - Framework utility for game state persistence
  * Provides save/load functionality with localStorage backend
  */
+
+// Save file format version (for backward compatibility)
+const SAVE_FORMAT_VERSION = '1.0.0';
+
 export class SaveSystem {
   /**
    * @param {Object} config - Save system configuration
@@ -74,7 +78,7 @@ export class SaveSystem {
 
     try {
       const saveData = {
-        version: '1.0.0',
+        version: SAVE_FORMAT_VERSION,
         timestamp: Date.now(),
         metadata: metadata,
         gameState: gameState

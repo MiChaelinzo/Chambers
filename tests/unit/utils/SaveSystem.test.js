@@ -4,6 +4,9 @@
 import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
 import { SaveSystem } from '../../../framework/utils/SaveSystem.js';
 
+// Save file format version should match SaveSystem
+const SAVE_FORMAT_VERSION = '1.0.0';
+
 describe('SaveSystem', () => {
   let saveSystem;
   const gameId = 'test_game';
@@ -65,7 +68,7 @@ describe('SaveSystem', () => {
       expect(loaded).not.toBeNull();
       expect(loaded.gameState).toEqual(gameState);
       expect(loaded.metadata).toEqual(metadata);
-      expect(loaded.version).toBe('1.0.0');
+      expect(loaded.version).toBe(SAVE_FORMAT_VERSION);
       expect(loaded.timestamp).toBeGreaterThan(0);
     });
 
